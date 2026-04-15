@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Awareness by Art — National Student Art Platform</title>
+  <meta name="description" content="India's premier free monthly art competition for students aged 6–17. Submit artwork, win prizes, earn certificates, and help plant trees. Fully CSR-funded, DPDP compliant." />
+  <meta name="keywords" content="art competition india, student art contest, online drawing competition, awareness by art, free art contest" />
+  <meta property="og:title" content="Awareness by Art" />
+  <meta property="og:description" content="National student art platform — monthly themes, real prizes, real trees." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     GLOBAL HEADER
+═══════════════════════════════════════════ -->
+<header id="site-header">
+  <div class="header-inner">
+    <a href="#home" class="logo" id="nav-logo">Awareness<span> by Art</span></a>
+    <nav id="main-nav">
+      <a href="#home"         class="nav-link" data-page="home">Home</a>
+      <a href="#events"       class="nav-link" data-page="events">Events &amp; Calendar</a>
+      <a href="#results"      class="nav-link" data-page="results">Results</a>
+      <a href="#gallery"      class="nav-link" data-page="gallery">Gallery</a>
+      <a href="#organization" class="nav-link" data-page="organization">Organization</a>
+      <a href="#about"        class="nav-link" data-page="about">About Us</a>
+      <a href="#contact"      class="nav-link" data-page="contact">Contact Us</a>
+    </nav>
+    <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">&#9776;</button>
+    <div class="header-actions">
+      <button class="btn-login" id="btn-header-login" onclick="openLoginModal()">Login</button>
+      <button class="btn-register" id="btn-header-register" onclick="startRegistration()">Register Now</button>
+      <button class="btn-register hidden" id="btn-header-dash" onclick="navigate('dashboard')" style="background:var(--navy)">My Account</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     PAGE CONTENT OUTLET
+═══════════════════════════════════════════ -->
+<main id="page-content"></main>
+
+<!-- ═══════════════════════════════════════════
+     GLOBAL FOOTER
+═══════════════════════════════════════════ -->
+<footer id="site-footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">Awareness<span style="color:var(--primary-light)"> by Art</span></div>
+      <p>A premier national platform fostering the next generation of creative talent through monthly competitions, community recognition, and real environmental impact.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram" title="Instagram">📸</a>
+        <a href="#" aria-label="Facebook" title="Facebook">📘</a>
+        <a href="#" aria-label="YouTube" title="YouTube">▶️</a>
+        <a href="#" aria-label="Twitter" title="Twitter">🐦</a>
+      </div>
+      <div class="footer-newsletter">
+        <input type="email" id="newsletter-email" placeholder="Your email address" />
+        <button onclick="subscribeNewsletter()">Join</button>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <a href="#home" onclick="navigate('home')">Home</a>
+      <a href="#events" onclick="navigate('events')">Events &amp; Calendar</a>
+      <a href="#results" onclick="navigate('results')">Results</a>
+      <a href="#gallery" onclick="navigate('gallery')">Gallery</a>
+      <a href="#organization" onclick="navigate('organization')">Organization</a>
+    </div>
+    <div class="footer-col">
+      <h4>Community</h4>
+      <a href="javascript:void(0)" onclick="openLoginModal()">Login</a>
+      <a href="javascript:void(0)" onclick="startRegistration()">Register Now</a>
+      <a href="#dashboard" onclick="navigate('dashboard')">My Account</a>
+      <a href="#about" onclick="navigate('about')">About Us</a>
+      <a href="#contact" onclick="navigate('contact')">Contact Us</a>
+      <a href="javascript:void(0)" onclick="openModal('terms-modal')">Terms &amp; Conditions</a>
+      <a href="admin.html" style="opacity:0.5">Admin</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; <script>document.write(new Date().getFullYear())</script> Awareness by Art. All rights reserved. &nbsp;|&nbsp;
+    <a href="javascript:void(0)" onclick="openModal('terms-modal')" style="color:inherit">Privacy Policy</a> &nbsp;|&nbsp;
+    <a href="javascript:void(0)" onclick="openModal('terms-modal')" style="color:inherit">Terms of Service</a>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     MODALS
+═══════════════════════════════════════════ -->
+
+<!-- LOGIN MODAL -->
+<div id="login-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Login">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('login-modal')" aria-label="Close">&times;</button>
+    <h2>Welcome Back</h2>
+    <p class="modal-desc">Sign in to your Awareness by Art account.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+      <button class="social-btn" onclick="socialLogin('Google')">
+        <span>🔵</span> Continue with Google
+      </button>
+      <button class="social-btn" onclick="socialLogin('Facebook')">
+        <span>📘</span> Continue with Facebook
+      </button>
+    </div>
+    <div class="form-divider">or sign in with email</div>
+    <div class="form-group">
+      <label class="form-label" for="login-email">Email Address</label>
+      <input id="login-email" class="form-input" type="email" placeholder="you@example.com" />
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="login-password">Password</label>
+      <input id="login-password" class="form-input" type="password" placeholder="••••••••" />
+    </div>
+    <button class="form-submit" onclick="doLogin()">Sign In</button>
+    <p style="text-align:center;margin-top:16px;font-size:0.85rem;color:var(--text-muted)">
+      Don't have an account? <a href="#" onclick="switchToSignup()" style="color:var(--primary);font-weight:700">Create one free</a>
+    </p>
+  </div>
+</div>
+
+<!-- SIGNUP MODAL -->
+<div id="signup-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Sign Up">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('signup-modal')" aria-label="Close">&times;</button>
+    <h2>Create Account</h2>
+    <p class="modal-desc">Join Awareness by Art — it's completely free.</p>
+    <div class="form-group">
+      <label class="form-label" for="signup-name">Full Name</label>
+      <input id="signup-name" class="form-input" type="text" placeholder="Your full name" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="signup-email">Email</label>
+        <input id="signup-email" class="form-input" type="email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="signup-mobile">Mobile</label>
+        <input id="signup-mobile" class="form-input" type="tel" placeholder="+91 9876543210" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="signup-password">Password</label>
+      <input id="signup-password" class="form-input" type="password" placeholder="Min. 8 characters" />
+    </div>
+    <button class="form-submit" onclick="doSignup()">Create My Free Account</button>
+    <p style="text-align:center;margin-top:16px;font-size:0.85rem;color:var(--text-muted)">
+      Already have an account? <a href="#" onclick="switchToLogin()" style="color:var(--primary);font-weight:700">Sign in</a>
+    </p>
+  </div>
+</div>
+
+<!-- REGISTRATION WIZARD MODAL -->
+<div id="reg-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Register for Competition">
+  <div class="modal modal-xl">
+    <button class="modal-close" onclick="closeModal('reg-modal')" aria-label="Close">&times;</button>
+    <div id="reg-wizard-content"></div>
+  </div>
+</div>
+
+<!-- EVENT POPUP MODAL -->
+<div id="event-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Event Details">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('event-modal')" aria-label="Close">&times;</button>
+    <div id="event-modal-content"></div>
+  </div>
+</div>
+
+<!-- CERTIFICATE MODAL -->
+<div id="cert-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Certificate">
+  <div class="modal modal-lg">
+    <button class="modal-close" onclick="closeModal('cert-modal')" aria-label="Close">&times;</button>
+    <div id="cert-modal-content"></div>
+    <canvas id="cert-canvas" style="display:none"></canvas>
+  </div>
+</div>
+
+<!-- TERMS MODAL -->
+<div id="terms-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Terms and Conditions">
+  <div class="modal modal-lg">
+    <button class="modal-close" onclick="closeModal('terms-modal')" aria-label="Close">&times;</button>
+    <h2>Terms &amp; Conditions</h2>
+    <div style="max-height:500px;overflow-y:auto;margin-top:20px;color:var(--text-secondary);font-size:0.88rem;line-height:1.8">
+      <p><strong>1. Participation Eligibility</strong><br>Open to students aged 6–17 years. Participation is free of charge.</p>
+      <p style="margin-top:12px"><strong>2. Student IP &amp; Copyright</strong><br>Students retain full copyright of their artwork. By submitting, participants grant Awareness by Art a non-exclusive, royalty-free license to display and share artwork for platform operations, CSR reporting, and educational purposes. Artwork will not be sold commercially without written consent.</p>
+      <p style="margin-top:12px"><strong>3. DPDP Act Compliance</strong><br>We comply fully with India's Digital Personal Data Protection Act 2023. Student data is handled via teacher-mediated model. Minimal data is collected — only name, grade, school, and artwork.</p>
+      <p style="margin-top:12px"><strong>4. Content Policy</strong><br>All submissions are moderated for appropriate content. Submissions violating content guidelines will be disqualified. Zero tolerance for inappropriate imagery.</p>
+      <p style="margin-top:12px"><strong>5. Prize Distribution</strong><br>Prizes are awarded based on jury decisions which are final and binding. CSR surplus funds are transparently transferred to NGO plantation partners.</p>
+      <p style="margin-top:12px"><strong>6. Environmental Commitment</strong><br>All platform surplus funds after operations are transferred to SankalpTaru or SayTrees for verified tree plantation with blockchain tracking.</p>
+    </div>
+    <button class="form-submit" style="margin-top:24px" onclick="closeModal('terms-modal')">I Understand</button>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toast-container" role="status" aria-live="polite"></div>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════ -->
+<script src="js/data.js"></script>
+<script src="js/pages.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
