@@ -1182,7 +1182,10 @@ function renderDashboard() {
       <!-- Sidebar -->
       <div class="dashboard-sidebar">
         <div class="sidebar-user">
-          <div class="user-avatar">${escapeHtml(initial)}</div>
+          ${user.picture
+            ? `<img src="${user.picture}" alt="${escapeHtml(initial)}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;margin-bottom:12px" referrerpolicy="no-referrer" />`
+            : `<div class="user-avatar">${escapeHtml(initial)}</div>`
+          }
           <h4 style="color:var(--navy)">${escapeHtml(user.name)}</h4>
           <p style="font-size:0.82rem;color:var(--text-muted)">${escapeHtml(user.email)}</p>
           <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px">Member since ${user.joined || 'Today'}</p>

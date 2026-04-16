@@ -12,6 +12,8 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Google Identity Services for Sign-In -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -99,6 +101,9 @@
     <button class="modal-close" onclick="closeModal('login-modal')" aria-label="Close">&times;</button>
     <h2>Welcome Back</h2>
     <p class="modal-desc">Sign in to your Art for Awareness account.</p>
+    <!-- Google Sign-In button (rendered by Google Identity Services) -->
+    <div id="google-signin-btn" style="display:flex;justify-content:center;margin-bottom:16px"></div>
+    <div class="form-divider">or sign in with email</div>
     <div class="form-group">
       <label class="form-label" for="login-email">Email Address</label>
       <input id="login-email" class="form-input" type="email" placeholder="you@example.com" />
@@ -121,6 +126,8 @@
     <button class="modal-close" onclick="closeModal('signup-modal')" aria-label="Close">&times;</button>
     <h2>Create Account</h2>
     <p class="modal-desc">Join Art for Awareness — it's completely free.</p>
+    <div id="google-signup-btn" style="display:flex;justify-content:center;margin-bottom:16px"></div>
+    <div class="form-divider">or sign up with email</div>
     <div class="form-group">
       <label class="form-label" for="signup-name">Full Name</label>
       <input id="signup-name" class="form-input" type="text" placeholder="Your full name" />
@@ -133,6 +140,26 @@
       <div class="form-group">
         <label class="form-label" for="signup-mobile">Mobile</label>
         <input id="signup-mobile" class="form-input" type="tel" placeholder="+91 9876543210" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label" for="signup-city">City</label>
+        <input id="signup-city" class="form-input" type="text" placeholder="Your city" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="signup-state">State</label>
+        <select id="signup-state" class="form-select">
+          <option value="">Select State</option>
+          <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option>
+          <option>Chhattisgarh</option><option>Goa</option><option>Gujarat</option><option>Haryana</option>
+          <option>Himachal Pradesh</option><option>Jharkhand</option><option>Karnataka</option><option>Kerala</option>
+          <option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option><option>Meghalaya</option>
+          <option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+          <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option>
+          <option>Tripura</option><option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+          <option>Delhi</option><option>Chandigarh</option><option>Other</option>
+        </select>
       </div>
     </div>
     <div class="form-group">

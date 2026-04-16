@@ -26,6 +26,130 @@ function hashPassword(str) {
   return 'h_' + Math.abs(hash).toString(36);
 }
 
+// ═══════════════════════════════════════════════
+//  GOOGLE SIGN-IN (Google Identity Services)
+// ═══════════════════════════════════════════════
+// INSTRUCTIONS: Replace this with your Google Cloud Console Client ID.
+// 1. Go to https://console.cloud.google.com/apis/credentials
+// 2. Create a project (or select existing)
+// 3. Configure OAuth Consent Screen (External, add your domain)
+// 4. Create OAuth 2.0 Client ID (Web application)
+// 5. Add Authorized JavaScript Origins:
+//    - http://localhost:8090 (for local dev)
+//    - https://yourdomain.com (for production)
+// 6. Copy the Client ID and paste it below.
+const GOOGLE_CLIENT_ID = ''; // <-- PASTE YOUR CLIENT ID HERE
+
+let _googleInitialized = false;
+
+function initGoogleSignIn() {
+  if (_googleInitialized || !GOOGLE_CLIENT_ID || typeof google === 'undefined') return;
+  _googleInitialized = true;
+
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleCredential,
+    auto_select: false,
+  });
+
+  // Render button in login modal
+  const loginBtn = document.getElementById('google-signin-btn');
+  if (loginBtn) {
+    google.accounts.id.renderButton(loginBtn, {
+      type: 'standard',
+      theme: 'outline',
+      size: 'large',
+      text: 'signin_with',
+      shape: 'rectangular',
+      width: 320,
+    });
+  }
+
+  // Render button in signup modal
+  const signupBtn = document.getElementById('google-signup-btn');
+  if (signupBtn) {
+    google.accounts.id.renderButton(signupBtn, {
+      type: 'standard',
+      theme: 'outline',
+      size: 'large',
+      text: 'signup_with',
+      shape: 'rectangular',
+      width: 320,
+    });
+  }
+}
+
+// Decode JWT without external library (Google ID tokens are base64url-encoded JSON)
+function decodeJwt(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const payload = decodeURIComponent(atob(base64).split('').map(c =>
+      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    ).join(''));
+    return JSON.parse(payload);
+  } catch (e) { return null; }
+}
+
+function handleGoogleCredential(response) {
+  const payload = decodeJwt(response.credential);
+  if (!payload || !payload.email) {
+    showToast('Google sign-in failed. Please try again.', 'error');
+    return;
+  }
+
+  const email = payload.email;
+  const name = payload.name || email.split('@')[0];
+  const picture = payload.picture || '';
+
+  // Check if user already exists
+  let stored = JSON.parse(localStorage.getItem('aba_user_' + email) || 'null');
+
+  if (!stored) {
+    // Create new account from Google
+    stored = {
+      name: name,
+      email: email,
+      mobile: '',
+      provider: 'Google',
+      picture: picture,
+      googleId: payload.sub,
+      joined: new Date().toLocaleDateString('en-IN'),
+    };
+    localStorage.setItem('aba_user_' + email, JSON.stringify(stored));
+  } else {
+    // Update existing account with latest Google info
+    stored.picture = picture;
+    stored.googleId = payload.sub;
+    if (!stored.provider) stored.provider = 'Google';
+    localStorage.setItem('aba_user_' + email, JSON.stringify(stored));
+  }
+
+  // Save session
+  AUTH.save({ name: stored.name, email: stored.email, mobile: stored.mobile, provider: 'Google', picture: picture, joined: stored.joined });
+  closeModal('login-modal');
+  closeModal('signup-modal');
+  updateHeaderAuth();
+  showToast('Signed in as ' + escapeHtml(stored.name) + '!', 'success');
+  navigate('dashboard');
+}
+
+// Initialize Google Sign-In when the page loads and when modals open
+document.addEventListener('DOMContentLoaded', () => {
+  // Retry initialization periodically until Google SDK loads
+  const interval = setInterval(() => {
+    if (typeof google !== 'undefined' && google.accounts) {
+      initGoogleSignIn();
+      clearInterval(interval);
+    }
+  }, 500);
+  // Stop retrying after 10 seconds
+  setTimeout(() => clearInterval(interval), 10000);
+});
+
+// Re-render Google buttons when modals open (they get destroyed on modal close/reopen)
+const _origOpenModal = typeof openModal === 'function' ? openModal : null;
+
 // ─── Carousel interval tracker (cleared on page nav) ───
 let _carouselInterval = null;
 
@@ -112,11 +236,15 @@ function openModal(id) {
   if (!el) return;
   el.classList.add('open');
   document.body.style.overflow = 'hidden';
+  // Re-render Google Sign-In buttons when auth modals open
+  if ((id === 'login-modal' || id === 'signup-modal') && GOOGLE_CLIENT_ID && typeof google !== 'undefined') {
+    setTimeout(() => initGoogleSignIn(), 200);
+  }
   // Focus first focusable element
   setTimeout(() => {
-    const focusable = el.querySelector('input:not([type="hidden"]):not([style*="display:none"]), select, textarea, button.form-submit, button.social-btn');
+    const focusable = el.querySelector('input:not([type="hidden"]):not([style*="display:none"]), select, textarea, button.form-submit');
     if (focusable) focusable.focus();
-  }, 100);
+  }, 300);
 }
 
 function closeModal(id) {
@@ -225,6 +353,8 @@ function doSignup() {
   const name = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
   const mobile = document.getElementById('signup-mobile').value.trim();
+  const city = document.getElementById('signup-city')?.value.trim() || '';
+  const state = document.getElementById('signup-state')?.value || '';
   const pass = document.getElementById('signup-password').value;
   const terms = document.getElementById('signup-terms')?.checked;
 
@@ -238,9 +368,9 @@ function doSignup() {
     return;
   }
 
-  const user = { name, email, mobile, passwordHash: hashPassword(pass), joined: new Date().toLocaleDateString('en-IN') };
+  const user = { name, email, mobile, city, state, passwordHash: hashPassword(pass), joined: new Date().toLocaleDateString('en-IN') };
   localStorage.setItem('aba_user_' + email, JSON.stringify(user));
-  AUTH.save({ name, email, mobile, joined: user.joined });
+  AUTH.save({ name, email, mobile, city, state, joined: user.joined });
   closeModal('signup-modal');
   updateHeaderAuth();
   showToast('Account created! Welcome, ' + escapeHtml(name) + '!', 'success');
