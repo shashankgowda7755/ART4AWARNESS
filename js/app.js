@@ -487,8 +487,8 @@ function renderRegStep() {
         </div>
 
         <div style="background:var(--primary-pale);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto">
-          <p style="color:var(--primary);font-weight:600;font-size:0.88rem;margin-bottom:4px">\uD83C\uDF31 Your art plants a tree!</p>
-          <p style="font-size:0.82rem;color:var(--text-secondary)">Every submission contributes to our Green Fund. Trees planted through SankalpTaru.</p>
+          <p style="color:var(--primary);font-weight:600;font-size:0.88rem;margin-bottom:4px">\uD83C\uDF0D Your art spreads awareness!</p>
+          <p style="font-size:0.82rem;color:var(--text-secondary)">Every submission helps build environmental awareness through creative expression.</p>
         </div>
 
         <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:20px">
@@ -692,7 +692,7 @@ function viewCertificate(type, eventName, winner) {
       <div style="position:absolute;bottom:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.05)"></div>
       <div style="position:relative;z-index:1">
         <div style="font-size:2.5rem;margin-bottom:8px">${isWinner ? '\uD83C\uDFC6' : '\uD83C\uDFA8'}</div>
-        <p style="color:var(--gold-light);font-size:0.75rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px">Awareness by Art</p>
+        <p style="color:var(--gold-light);font-size:0.75rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px">Art for Awareness</p>
         <h2 style="color:white;font-size:1.5rem;margin-bottom:4px">${isWinner ? 'Winner Certificate' : 'Certificate of Participation'}</h2>
         <p style="color:rgba(255,255,255,0.6);font-size:0.85rem;margin-bottom:24px">This is to certify that</p>
         <h1 style="color:var(--gold-light);font-size:2rem;font-weight:900;margin-bottom:4px">${safeName}</h1>
@@ -704,7 +704,7 @@ function viewCertificate(type, eventName, winner) {
         </div>
         <p style="color:rgba(255,255,255,0.5);font-size:0.78rem">${dateStr}</p>
         <div style="display:flex;justify-content:space-around;margin-top:24px;border-top:1px solid rgba(255,255,255,0.15);padding-top:16px">
-          <div><p style="color:rgba(255,255,255,0.5);font-size:0.7rem">Platform Director</p><p style="color:white;font-size:0.85rem;font-weight:700">Awareness by Art</p></div>
+          <div><p style="color:rgba(255,255,255,0.5);font-size:0.7rem">Platform Director</p><p style="color:white;font-size:0.85rem;font-weight:700">Art for Awareness</p></div>
           <div style="text-align:right"><p style="color:rgba(255,255,255,0.5);font-size:0.7rem">Certificate ID</p><p style="color:white;font-size:0.85rem;font-weight:700">${certId}</p></div>
         </div>
       </div>
@@ -795,7 +795,7 @@ function downloadCertificate() {
   ctx.fillText('Platform Director', 200, 620);
   ctx.fillStyle = '#ffffff';
   ctx.font = '700 16px sans-serif';
-  ctx.fillText('Awareness by Art', 200, 645);
+  ctx.fillText('Art for Awareness', 200, 645);
 
   // Footer right
   ctx.textAlign = 'right';

@@ -56,8 +56,8 @@ function renderHome() {
 
   const slides = [
     { bg: 'assets/banner1.png', tag: 'APRIL 2026 THEME', title: "Nature's Colors", desc: "Express the beauty of nature through paint, pencil or digital art. Open to all students aged 6–17.", cta1: 'Submit Artwork', cta1Action: 'startRegistration()', cta2: 'View Calendar', cta2Action: 'navigate("events")' },
-    { bg: 'assets/banner2.png', tag: 'FREE COMPETITION', title: 'Art for Every Child', desc: "India's premier free monthly art competition. No fees. No barriers. Every artwork plants a tree.", cta1: 'Register Now', cta1Action: 'startRegistration()', cta2: 'Learn More', cta2Action: 'navigate("about")' },
-    { bg: 'assets/banner3.png', tag: '100% CSR FUNDED', title: 'Creativity Meets Sustainability', desc: 'All surplus funds go to tree plantation through verified NGO partners. Your art makes a real impact.', cta1: 'Get Started', cta1Action: 'startRegistration()', cta2: 'Our Mission', cta2Action: 'navigate("organization")' },
+    { bg: 'assets/banner2.png', tag: 'FREE COMPETITION', title: 'Art for Every Child', desc: "India's premier free monthly art competition. No fees. No barriers. Creativity with a cause.", cta1: 'Register Now', cta1Action: 'startRegistration()', cta2: 'Learn More', cta2Action: 'navigate("about")' },
+    { bg: 'assets/banner3.png', tag: 'MONTHLY THEMES', title: 'Creativity Meets Awareness', desc: 'Every month, a new environmental theme. From Earth Day to Ocean Day — your art becomes a voice for the planet.', cta1: 'Get Started', cta1Action: 'startRegistration()', cta2: 'View Themes', cta2Action: 'navigate("events")' },
   ];
 
   // Show the 3 NEAREST upcoming competitions (future first, then recent past as fallback)
@@ -117,16 +117,34 @@ function renderHome() {
       </div>
     </section>
 
-    <!-- IMPACT DASHBOARD (baseline + real-time community contributions) -->
+    <!-- IMPACT STATS — Redesigned with icons and color accents -->
     ${(() => {
       const stats = computePlatformStats();
       return `
-    <section class="stats-bar">
-      <div class="stats-inner">
-        <div class="stat-item"><div class="stat-num">${stats.artworks}</div><div class="stat-label">Artworks Created</div></div>
-        <div class="stat-item"><div class="stat-num">${stats.schools}</div><div class="stat-label">Schools Participating</div></div>
-        <div class="stat-item"><div class="stat-num">${stats.trees}</div><div class="stat-label">Trees Planted</div></div>
-        <div class="stat-item"><div class="stat-num">${stats.co2}</div><div class="stat-label">CO₂ Sequestered</div></div>
+    <section style="background:var(--bg-white);padding:40px 0">
+      <div class="container">
+        <div class="impact-stats-grid">
+          <div class="impact-stat-card">
+            <div class="impact-stat-icon" style="background:rgba(27,107,125,0.1);color:var(--primary)">🎨</div>
+            <div class="impact-stat-value" style="color:var(--primary)">${stats.artworks}</div>
+            <div class="impact-stat-label">Artworks Submitted</div>
+          </div>
+          <div class="impact-stat-card">
+            <div class="impact-stat-icon" style="background:rgba(255,107,90,0.1);color:var(--secondary)">🏫</div>
+            <div class="impact-stat-value" style="color:var(--secondary)">${stats.schools}</div>
+            <div class="impact-stat-label">Schools Nationwide</div>
+          </div>
+          <div class="impact-stat-card">
+            <div class="impact-stat-icon" style="background:rgba(255,181,71,0.1);color:var(--accent)">🏆</div>
+            <div class="impact-stat-value" style="color:var(--accent)">${stats.rawUsers || '500+'}</div>
+            <div class="impact-stat-label">Young Artists</div>
+          </div>
+          <div class="impact-stat-card">
+            <div class="impact-stat-icon" style="background:rgba(16,185,129,0.1);color:#10B981">📅</div>
+            <div class="impact-stat-value" style="color:#10B981">12</div>
+            <div class="impact-stat-label">Monthly Themes</div>
+          </div>
+        </div>
       </div>
     </section>`;
     })()}
@@ -245,7 +263,7 @@ function renderHome() {
     <!-- FAQ -->
     <section class="section container">
       <h2 class="section-title">Frequently Asked Questions</h2>
-      <p class="section-subtitle">Everything you need to know about participating in Awareness by Art.</p>
+      <p class="section-subtitle">Everything you need to know about participating in Art for Awareness.</p>
       <div style="max-width:720px;margin:0 auto">
         ${faqs.map((f, i) => `
           <div class="faq-item" data-faq="${i}">
@@ -261,16 +279,15 @@ function renderHome() {
       </div>
     </section>
 
-    <!-- INSTAGRAM FEED -->
-    <section class="section-sm container" style="padding-bottom:80px">
-      <h2 class="section-title mb-8">Follow Our Journey</h2>
-      <p class="section-subtitle">@awarenessbyart on Instagram</p>
-      <div class="instagram-grid">
-        ${DATA.instaFeed.map(item => `
-          <div class="insta-item" style="background:${item.gradient}">
-            <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem">${item.emoji}</span>
-          </div>
-        `).join('')}
+    <!-- CTA BANNER -->
+    <section style="background:linear-gradient(135deg,var(--dark) 0%,var(--primary) 100%);padding:64px 0;text-align:center">
+      <div class="container">
+        <h2 style="color:white;margin-bottom:12px">Ready to Create with a Cause?</h2>
+        <p style="color:rgba(255,255,255,0.75);max-width:480px;margin:0 auto 28px">Join thousands of young artists creating awareness through art. Free to participate, open to all students aged 6\u201317.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-lg" style="background:var(--secondary);color:white" onclick="startRegistration()">Submit Your Artwork</button>
+          <button class="btn btn-outline btn-lg" style="color:white;border-color:rgba(255,255,255,0.3)" onclick="navigate('about')">Learn More</button>
+        </div>
       </div>
     </section>
   `;
@@ -610,8 +627,8 @@ function renderResults() {
           </div>
 
           <div style="margin-top:32px;padding:20px;background:var(--primary-pale);border-radius:var(--radius-lg)">
-            <h4 style="color:var(--primary);margin-bottom:8px">🌱 Green Impact</h4>
-            <p style="font-size:0.85rem">These competitions have funded the planting of <strong style="color:var(--primary)">${totalTrees.toLocaleString('en-IN')} trees</strong> across India through SankalpTaru.</p>
+            <h4 style="color:var(--primary);margin-bottom:8px">🌍 Awareness Through Art</h4>
+            <p style="font-size:0.85rem">Each month's competition theme is tied to an environmental awareness day — building a generation that creates with a cause.</p>
           </div>
         </div>
 
@@ -823,7 +840,7 @@ function renderOrganization() {
           <div class="how-num">03</div>
           <div class="how-icon">🌱</div>
           <h4>Impact</h4>
-          <p style="font-size:0.88rem;margin-top:8px">Surplus funds plant blockchain-verified trees. You receive monthly impact reports.</p>
+          <p style="font-size:0.88rem;margin-top:8px">Monthly impact reports covering student engagement, artwork quality, and awareness reach.</p>
         </div>
         <div class="how-step">
           <div class="how-num">04</div>
@@ -869,8 +886,8 @@ function renderOrganization() {
           <span style="font-family:var(--font-heading);font-weight:900;color:var(--primary);font-size:1.3rem">\u20B97,00,000</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0">
-          <span style="font-weight:600;color:var(--navy)">Trees Planted / Month</span>
-          <span style="font-family:var(--font-heading);font-weight:900;color:var(--success);font-size:1.3rem">~5,000 🌳</span>
+          <span style="font-weight:600;color:var(--navy)">Students Reached / Month</span>
+          <span style="font-family:var(--font-heading);font-weight:900;color:var(--success);font-size:1.3rem">20,000+ 🎨</span>
         </div>
       </div>
     </section>
@@ -917,10 +934,10 @@ function renderAbout() {
       <div class="about-intro">
         <div>
           <span class="pill pill-primary" style="margin-bottom:16px">OUR STORY</span>
-          <h1 style="margin-bottom:16px">About Awareness by Art</h1>
-          <p style="margin-bottom:16px">Awareness by Art is India's premier free monthly art competition platform for students aged 6&ndash;17. We believe that every child's creativity is a force for planetary change.</p>
+          <h1 style="margin-bottom:16px">About Art for Awareness</h1>
+          <p style="margin-bottom:16px">Art for Awareness is India's premier free monthly art competition platform for students aged 6&ndash;17. We believe that every child's creativity is a force for planetary change.</p>
           <p style="margin-bottom:16px">Unlike traditional art competitions that are sporadic, commercial, and urban-centric, we've built a permanent, recurring Creative Infrastructure. Our platform operates on a monthly cycle, fostering consistent artistic practice and habit formation among students.</p>
-          <p style="margin-bottom:24px">We are 100% CSR-funded, fully compliant with the Digital Personal Data Protection Act 2023, and committed to channelling all surplus funds into verified tree plantation through our NGO partners.</p>
+          <p style="margin-bottom:24px">We are 100% CSR-funded, fully compliant with the Digital Personal Data Protection Act 2023, and committed to fostering environmental awareness through creative expression.</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap">
             <button class="btn btn-primary" onclick="navigate('organization')">Partner With Us</button>
             <button class="btn btn-outline" onclick="navigate('contact')">Get In Touch</button>
@@ -929,7 +946,7 @@ function renderAbout() {
         <div class="about-visual">
           <div class="about-visual-icon">🎨</div>
           <h3 style="color:var(--primary);margin-bottom:8px">Art + Environment = Impact</h3>
-          <p style="font-size:0.9rem">Every artwork submitted helps plant a tree. We've turned creativity into a force for environmental restoration.</p>
+          <p style="font-size:0.9rem">Every month, a new environmental theme. Every artwork, a voice for the planet. Creativity with a cause.</p>
         </div>
       </div>
     </section>
@@ -952,16 +969,16 @@ function renderAbout() {
             <div class="achievement-label">Participating Schools</div>
           </div>
           <div class="achievement-card">
-            <div class="achievement-num">${stats.trees}</div>
-            <div class="achievement-label">Trees Planted</div>
+            <div class="achievement-num">12</div>
+            <div class="achievement-label">Monthly Themes</div>
           </div>
           <div class="achievement-card">
             <div class="achievement-num">28</div>
             <div class="achievement-label">States Represented</div>
           </div>
           <div class="achievement-card">
-            <div class="achievement-num">${stats.co2}</div>
-            <div class="achievement-label">Carbon Sequestered (Est.)</div>
+            <div class="achievement-num">6</div>
+            <div class="achievement-label">Age Categories</div>
           </div>
           <div class="achievement-card">
             <div class="achievement-num">\u20B942L+</div>
@@ -987,7 +1004,7 @@ function renderAbout() {
           <div class="card-body" style="text-align:center;padding:32px">
             <div style="font-size:3rem;margin-bottom:16px">🌱</div>
             <h3>Environment</h3>
-            <p style="margin-top:12px;font-size:0.88rem">100% of surplus funds go to blockchain-verified tree plantation through SankalpTaru and SayTrees NGO partners.</p>
+            <p style="margin-top:12px;font-size:0.88rem">Monthly themes tied to environmental awareness days, building a generation that understands and advocates for the planet.</p>
           </div>
         </div>
         <div class="card">
@@ -1215,7 +1232,7 @@ function switchDashTab(tab) {
 }
 
 function renderDashOverview(user, submissions) {
-  const treesPlanted = submissions.length * 3;
+  const themes = new Set(submissions.map(s => s.event).filter(Boolean)).size;
   const declared = submissions.filter(s => s.resultStatus);
   const underReview = submissions.filter(s => !s.resultStatus);
   return `
@@ -1230,8 +1247,8 @@ function renderDashOverview(user, submissions) {
         <div class="stat-label">Results Declared</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">${treesPlanted}</div>
-        <div class="stat-label">Trees Funded</div>
+        <div class="stat-num">${themes}</div>
+        <div class="stat-label">Themes Joined</div>
       </div>
       <div class="stat-card">
         <div class="stat-num">${underReview.length}</div>

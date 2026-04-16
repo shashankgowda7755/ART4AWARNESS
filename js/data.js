@@ -4,76 +4,108 @@
 
 const DATA = {
 
-  // ─── Monthly Events ───
+  // ─── Monthly Events (Environment-Focused Awareness Themes) ───
   events: [
+    // APRIL — World Earth Day (Apr 22)
     {
-      id: 1, day: 5, month: 4, year: 2026, monthName: "APRIL",
-      title: "Nature's Colors", type: "competition",
-      description: "Express the beauty of nature through paint, pencil or digital art. A focus on Earth's natural wonders and biodiversity.",
-      time: "10:00 AM – 10:00 PM", deadline: "April 20, 2026",
-      prize: "₹10,000 + Certificate"
+      id: 1, day: 1, month: 4, year: 2026, monthName: "APRIL",
+      title: "Earth Palette", type: "competition",
+      theme: "World Earth Day",
+      description: "Our planet is the ultimate canvas. Paint, sketch, or digitally create your vision of Earth — its landscapes, ecosystems, or a greener future. What does our planet mean to you?",
+      time: "10:00 AM – 10:00 PM", deadline: "April 25, 2026",
+      prize: "₹10,000 + Certificate + National Feature"
     },
     {
       id: 2, day: 12, month: 4, year: 2026, monthName: "APRIL",
-      title: "Sketching Masterclass", type: "workshop",
-      description: "Online workshop by award-winning artist Priya Sharma. Learn the fundamentals of shading and perspective.",
-      time: "3:00 PM – 5:00 PM", mode: "Online", link: "#",
+      title: "Nature Sketching Masterclass", type: "workshop",
+      description: "Online workshop: Learn to sketch trees, leaves, and landscapes from life. Fundamentals of botanical illustration and outdoor sketching.",
+      time: "3:00 PM – 5:00 PM", mode: "Online",
       instructor: "Priya Sharma"
     },
     {
-      id: 3, day: 14, month: 4, year: 2026, monthName: "APRIL",
-      title: "World Art Day", type: "special",
-      description: "Celebrate World Art Day! Special flash submission open to all ages. Submit your artwork with theme: 'Art for Peace'.",
-      time: "All Day"
+      id: 3, day: 22, month: 4, year: 2026, monthName: "APRIL",
+      title: "Earth Day Live Art", type: "special",
+      description: "Celebrate Earth Day with a live flash art challenge! 2-hour timed submission — create something that captures our planet's beauty under pressure.",
+      time: "4:00 PM – 6:00 PM"
     },
+    // MAY — World Biodiversity Day (May 22)
     {
-      id: 4, day: 22, month: 4, year: 2026, monthName: "APRIL",
-      title: "Earth Day Challenge", type: "competition",
-      description: "Earth Day special. Create artwork around climate action, sustainability, or our planet's future.",
-      time: "9:00 AM – 9:00 PM", deadline: "April 22, 2026",
-      prize: "₹5,000 + E-Certificate"
-    },
-    {
-      id: 5, day: 5, month: 5, year: 2026, monthName: "MAY",
-      title: "Ocean Dreams", type: "competition",
-      description: "Dive into the deep blue. Portrayiture and scenes inspired by our oceans, marine life and waterscapes.",
-      time: "10:00 AM – 10:00 PM", deadline: "May 20, 2026",
+      id: 4, day: 1, month: 5, year: 2026, monthName: "MAY",
+      title: "Nature's Brush", type: "competition",
+      theme: "World Biodiversity Day",
+      description: "Celebrate the incredible diversity of life on Earth. From rainforest canopies to coral reefs, from tiny insects to mighty elephants — paint the biodiversity that inspires you.",
+      time: "10:00 AM – 10:00 PM", deadline: "May 25, 2026",
       prize: "₹12,000 + Certificate"
     },
     {
-      id: 6, day: 8, month: 5, year: 2026, monthName: "MAY",
-      title: "Watercolor Basics", type: "workshop",
-      description: "Learn watercolor techniques from scratch. Perfect for beginners. Conducted by Ms. Veena Karki.",
-      time: "11:00 AM – 1:00 PM", mode: "Online", link: "#",
+      id: 5, day: 10, month: 5, year: 2026, monthName: "MAY",
+      title: "Watercolor Wildlife Workshop", type: "workshop",
+      description: "Learn watercolor techniques for painting animals and birds. Wet-on-wet, dry brush, and blending techniques for capturing wildlife.",
+      time: "11:00 AM – 1:00 PM", mode: "Online",
       instructor: "Veena Karki"
     },
+    // JUNE — World Environment Day (Jun 5)
     {
-      id: 7, day: 20, month: 6, year: 2026, monthName: "JUNE",
-      title: "Sunshine & Joy", type: "competition",
-      description: "Celebrate the season of sunshine! Create vibrant, joyful artworks that radiate warmth and happiness.",
-      time: "10:00 AM – 10:00 PM", deadline: "June 20, 2026",
+      id: 6, day: 1, month: 6, year: 2026, monthName: "JUNE",
+      title: "Green Vision", type: "competition",
+      theme: "World Environment Day",
+      description: "Imagine a sustainable future. What does a world powered by clean energy, restored forests, and clean oceans look like? Bring your green vision to life through art.",
+      time: "10:00 AM – 10:00 PM", deadline: "June 25, 2026",
       prize: "₹15,000 + National Recognition"
     },
+    // JULY — World Ocean Day (Jun 8 carry-over)
     {
-      id: 8, day: 1, month: 7, year: 2026, monthName: "JULY",
-      title: "Urban Geometry", type: "competition",
-      description: "Sharp lines, architectural patterns, and modern cityscapes. Capture the geometry of urban life.",
-      time: "10:00 AM – 10:00 PM", deadline: "July 20, 2026",
+      id: 7, day: 1, month: 7, year: 2026, monthName: "JULY",
+      title: "Deep Blue", type: "competition",
+      theme: "World Ocean Day",
+      description: "Dive into the deep blue. Paint the mysteries of the ocean — marine life, coral kingdoms, underwater worlds, or the urgent call to protect our seas from plastic pollution.",
+      time: "10:00 AM – 10:00 PM", deadline: "July 25, 2026",
       prize: "₹12,000 + Certificate"
     },
+    // AUGUST — Independence Day + Indian Wildlife
     {
-      id: 9, day: 12, month: 8, year: 2026, monthName: "AUGUST",
-      title: "The Human Story", type: "competition",
-      description: "Portraiture that captures the depth of emotion and the diversity of human experience.",
-      time: "10:00 AM – 10:00 PM", deadline: "August 20, 2026",
+      id: 8, day: 1, month: 8, year: 2026, monthName: "AUGUST",
+      title: "Wild India", type: "competition",
+      theme: "Indian Wildlife & Freedom",
+      description: "Celebrate India's independence by honoring its wild heritage. From Bengal tigers to Asiatic lions, from the Western Ghats to the Sundarbans — paint the wild spirit of India.",
+      time: "10:00 AM – 10:00 PM", deadline: "August 25, 2026",
       prize: "₹12,000 + Certificate"
     },
+    // SEPTEMBER — International Day for the Preservation of the Ozone Layer (Sep 16)
     {
-      id: 10, day: 20, month: 12, year: 2026, monthName: "DECEMBER",
-      title: "Dreamscapes", type: "competition",
-      description: "Surreal interpretations of the subconscious mind. Let your imagination run wild.",
-      time: "10:00 AM – 10:00 PM", deadline: "December 20, 2026",
-      prize: "₹20,000 + Grand Prize"
+      id: 9, day: 1, month: 9, year: 2026, monthName: "SEPTEMBER",
+      title: "Sky Canvas", type: "competition",
+      theme: "Ozone & Atmosphere",
+      description: "Look up. The sky protects us, inspires us, and connects us all. Create art about our atmosphere, skies, sunsets, auroras, or the invisible shield that protects all life on Earth.",
+      time: "10:00 AM – 10:00 PM", deadline: "September 25, 2026",
+      prize: "₹12,000 + Certificate"
+    },
+    // OCTOBER — Wildlife Week (Oct 1-7)
+    {
+      id: 10, day: 1, month: 10, year: 2026, monthName: "OCTOBER",
+      title: "Jungle Stories", type: "competition",
+      theme: "Wildlife Week",
+      description: "Every forest tells a story. Paint the creatures, ecosystems, and tales from India's jungles and wildlife sanctuaries. Art as a voice for the voiceless.",
+      time: "10:00 AM – 10:00 PM", deadline: "October 25, 2026",
+      prize: "₹12,000 + Certificate"
+    },
+    // NOVEMBER — Children's Day (Nov 14) + World Soil Day prep
+    {
+      id: 11, day: 1, month: 11, year: 2026, monthName: "NOVEMBER",
+      title: "Seeds of Change", type: "competition",
+      theme: "Children's Day & World Soil Day",
+      description: "Young hands can change the world. Paint what you would plant, grow, or build for a better tomorrow. From seeds to forests, from ideas to movements.",
+      time: "10:00 AM – 10:00 PM", deadline: "November 25, 2026",
+      prize: "₹12,000 + Certificate"
+    },
+    // DECEMBER — International Mountain Day (Dec 11)
+    {
+      id: 12, day: 1, month: 12, year: 2026, monthName: "DECEMBER",
+      title: "Mountain Calling", type: "competition",
+      theme: "International Mountain Day",
+      description: "Mountains are the water towers of the world. Capture the majesty of peaks, valleys, glaciers, and the communities that live in harmony with the highlands.",
+      time: "10:00 AM – 10:00 PM", deadline: "December 25, 2026",
+      prize: "₹20,000 + Grand Prize + National Feature"
     }
   ],
 
@@ -81,27 +113,27 @@ const DATA = {
   winners: [
     {
       id: 1, title: "Silent Wisps", artist: "Aisha Khan", rank: 1,
-      category: "Charcoal", ageGroup: "Age 10–12", event: "Nature's Colors", month: "April 2026",
+      category: "Charcoal", ageGroup: "Age 10–12", event: "Earth Palette", month: "April 2026",
       gradient: "linear-gradient(135deg, #1d4f5c 0%, #2E6B7A 60%, #3d8fa2 100%)",
-      emoji: "🌊"
+      emoji: "🌍"
     },
     {
-      id: 2, title: "Gilded Flow", artist: "Leo Santos", rank: 2,
-      category: "Mixed Media", ageGroup: "Age 16–17", event: "Urban Geometry", month: "July 2026",
-      gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
-      emoji: "🔷"
-    },
-    {
-      id: 3, title: "Monsoon Reverie", artist: "Priya Sharma", rank: 1,
-      category: "Watercolor", ageGroup: "Age 13–15", event: "Ocean Dreams", month: "May 2026",
+      id: 2, title: "Reef Dreams", artist: "Leo Santos", rank: 2,
+      category: "Mixed Media", ageGroup: "Age 16–17", event: "Deep Blue", month: "July 2026",
       gradient: "linear-gradient(135deg, #004e8c 0%, #0072b1 50%, #00a3e0 100%)",
-      emoji: "🎨"
+      emoji: "🐠"
     },
     {
-      id: 4, title: "Earth Mother", artist: "Rahul Verma", rank: 3,
-      category: "Oil Pastel", ageGroup: "Age 6–9", event: "Earth Day Challenge", month: "April 2026",
+      id: 3, title: "Canopy Light", artist: "Priya Sharma", rank: 1,
+      category: "Watercolor", ageGroup: "Age 13–15", event: "Nature's Brush", month: "May 2026",
       gradient: "linear-gradient(135deg, #2d5016 0%, #4a7c2f 50%, #7db845 100%)",
-      emoji: "🌱"
+      emoji: "🌿"
+    },
+    {
+      id: 4, title: "Tiger's Gaze", artist: "Rahul Verma", rank: 3,
+      category: "Oil Pastel", ageGroup: "Age 6–9", event: "Wild India", month: "August 2026",
+      gradient: "linear-gradient(135deg, #b45309 0%, #d97706 50%, #f59e0b 100%)",
+      emoji: "🐯"
     }
   ],
 
@@ -158,7 +190,7 @@ const DATA = {
   // ─── FAQs ───
   faqs: [
     {
-      q: "Who can participate in Awareness by Art competitions?",
+      q: "Who can participate in Art for Awareness competitions?",
       a: "Any student aged 6–17 years from any school in India can participate. The competition is completely free, inclusive, and open to all artistic mediums — traditional or digital."
     },
     {
@@ -179,11 +211,11 @@ const DATA = {
     },
     {
       q: "Is there any registration fee or participation cost?",
-      a: "Absolutely not. Awareness by Art is 100% free to participate. Our platform is funded through CSR partnerships, and all surplus funds go towards tree plantation drives across India."
+      a: "Absolutely not. Art for Awareness is 100% free to participate. Our platform is funded through CSR partnerships, ensuring every student can participate regardless of their background."
     },
     {
-      q: "How does the tree plantation initiative work?",
-      a: "For every artwork submitted, a portion of our CSR sponsorship surplus funds the planting of real trees through our NGO partners SankalpTaru and SayTrees. You can track the impact live on our homepage."
+      q: "How do the monthly environmental themes work?",
+      a: "Each month's competition theme is tied to a global environmental awareness day — from World Earth Day to World Ocean Day. Students create artwork around these themes, building environmental consciousness through creative expression."
     }
   ],
 
@@ -226,7 +258,7 @@ const DATA = {
     { icon: "🥉", title: "3rd Place", amount: "₹3,000", desc: "Cash prize + Winner Certificate + Gallery Feature", featured: false },
     { icon: "🎖️", title: "Jury Special", amount: "₹2,000", desc: "Jury's choice award for exceptional creativity and concept", featured: false },
     { icon: "🌟", title: "Top 10", amount: "Certificates", desc: "Participation + Merit certificates for all top-10 finalists in each category", featured: false },
-    { icon: "🌱", title: "Green Impact", amount: "Trees Planted", desc: "Every submission funds tree planting through SankalpTaru & SayTrees NGOs", featured: false }
+    { icon: "🌍", title: "Awareness Impact", amount: "Real Change", desc: "Every submission spreads environmental awareness. Monthly themes tied to global awareness days.", featured: false }
   ],
 
   // ─── Organization page ───
@@ -234,7 +266,7 @@ const DATA = {
     { icon: "🏆", title: "National Visibility", desc: "Get your organization featured across our platform, social media, and CSR reports reaching 20,000+ students nationwide." },
     { icon: "📊", title: "Measurable Impact", desc: "Receive detailed monthly impact reports covering student engagement, artwork submissions, and trees planted in your name." },
     { icon: "🎓", title: "Education CSR Compliance", desc: "Our platform qualifies under Schedule VII Clauses (ii), (iv) & (v) of the Companies Act, 2013, maximizing your CSR eligibility." },
-    { icon: "🌱", title: "Environmental Legacy", desc: "100% of surplus funds go to tree plantation via blockchain-verified NGO partners. Your brand plants real trees." },
+    { icon: "🌍", title: "Environmental Awareness", desc: "Monthly themes tied to global environmental awareness days. Your brand champions environmental consciousness through art." },
     { icon: "👨‍🏫", title: "Teacher Network", desc: "Gain access to a nationwide network of 1,000+ verified school teachers across Tier 1, 2, and 3 cities." },
     { icon: "🔒", title: "DPDP Compliant", desc: "Fully compliant with India's Digital Personal Data Protection Act 2023, with teacher-mediated student data handling." }
   ],

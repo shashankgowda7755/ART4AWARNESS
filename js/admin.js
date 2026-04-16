@@ -214,7 +214,7 @@ function renderAdminDashboard() {
       <div class="admin-stat success">
         <div class="label">Trees Funded</div>
         <div class="value">${treesPlanted}</div>
-        <div class="sub">Via SankalpTaru</div>
+        <div class="sub">Environmental awareness impact</div>
       </div>
     </div>
 

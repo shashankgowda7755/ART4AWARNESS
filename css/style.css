@@ -10,22 +10,25 @@
 
 /* ─── CSS Variables ─── */
 :root {
-  --primary: #2E6B7A;
-  --primary-dark: #1d4f5c;
-  --primary-light: #3d8fa2;
-  --primary-pale: #e8f4f7;
-  --navy: #0D2137;
-  --navy-mid: #1a3a55;
-  --gold: #C5A028;
-  --gold-light: #f5d76e;
+  --primary: #1B6B7D;
+  --primary-dark: #145562;
+  --primary-light: #2A8FA5;
+  --primary-pale: #E6F4F7;
+  --secondary: #FF6B5A;
+  --accent: #FFB547;
+  --navy: #0F1B2D;
+  --navy-mid: #1a3350;
+  --dark: #0F1B2D;
+  --gold: #FFB547;
+  --gold-light: #FFD685;
   --silver: #8A9BA8;
-  --bronze: #b87333;
-  --bg: #F2F4F7;
+  --bronze: #CD7F32;
+  --bg: #FAFAF7;
   --bg-white: #ffffff;
   --bg-card: #ffffff;
-  --text-primary: #0D2137;
-  --text-secondary: #4A6070;
-  --text-muted: #8A9BA8;
+  --text-primary: #0F1B2D;
+  --text-secondary: #4A5E6D;
+  --text-muted: #6B7D8A;
   --border: #DDE3E8;
   --border-light: #EEF1F4;
   --success: #22c55e;
@@ -745,6 +748,38 @@ footer {
   .nav-link.active { border-bottom: none; background: var(--primary-pale); border-radius: var(--radius-sm); }
   .header-actions { gap: 6px; }
   .btn-register { padding: 8px 14px; font-size: 0.8rem; }
+}
+
+/* ─── Impact Stats Grid (Redesigned) ─── */
+.impact-stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+}
+.impact-stat-card {
+  background: var(--bg-card); border-radius: var(--radius-xl); padding: 28px 24px;
+  text-align: center; border: 1px solid var(--border-light);
+  transition: var(--transition);
+}
+.impact-stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.impact-stat-icon {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; margin: 0 auto 16px;
+}
+.impact-stat-value {
+  font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900;
+  line-height: 1; margin-bottom: 6px;
+}
+.impact-stat-label {
+  font-size: 0.82rem; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+@media (max-width: 768px) {
+  .impact-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .impact-stat-card { padding: 20px 16px; }
+  .impact-stat-value { font-size: 1.6rem; }
+}
+@media (max-width: 480px) {
+  .impact-stats-grid { grid-template-columns: 1fr 1fr; }
 }
 
 /* ─── Focus Visible (Keyboard Accessibility) ─── */
