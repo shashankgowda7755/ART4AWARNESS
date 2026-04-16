@@ -28,22 +28,13 @@ function computePlatformStats() {
   const subs = (typeof getAllSubmissionsAcrossUsers === 'function') ? getAllSubmissionsAcrossUsers() : [];
   const users = (typeof getAllRegisteredUsers === 'function') ? getAllRegisteredUsers() : [];
   const realSchools = new Set(subs.map(s => s.school).filter(Boolean));
-  const baseArtworks = 24500;
-  const baseSchools = 1200;
-  const baseTrees = 8400;
-  const artworks = baseArtworks + subs.length;
-  const schools = baseSchools + realSchools.size;
-  const trees = baseTrees + (subs.length * 3);
-  const co2Tonnes = Math.round(trees * 0.02); // ~20kg CO2 per tree per year
+  const events = DATA.events.filter(e => e.type === 'competition');
   return {
-    artworks: artworks.toLocaleString('en-IN'),
-    schools: schools.toLocaleString('en-IN') + (realSchools.size === 0 ? '+' : ''),
-    trees: trees.toLocaleString('en-IN'),
-    co2: co2Tonnes + ' T',
-    rawArtworks: artworks,
-    rawSchools: schools,
-    rawTrees: trees,
-    rawUsers: users.length,
+    artworks: subs.length || '0',
+    schools: realSchools.size || '0',
+    users: users.length || '0',
+    themes: events.length,
+    hasData: subs.length > 0,
   };
 }
 
@@ -117,7 +108,7 @@ function renderHome() {
       </div>
     </section>
 
-    <!-- IMPACT STATS — Redesigned with icons and color accents -->
+    <!-- IMPACT STATS -->
     ${(() => {
       const stats = computePlatformStats();
       return `
@@ -130,18 +121,18 @@ function renderHome() {
             <div class="impact-stat-label">Artworks Submitted</div>
           </div>
           <div class="impact-stat-card">
-            <div class="impact-stat-icon" style="background:rgba(255,107,90,0.1);color:var(--secondary)">🏫</div>
-            <div class="impact-stat-value" style="color:var(--secondary)">${stats.schools}</div>
-            <div class="impact-stat-label">Schools Nationwide</div>
-          </div>
-          <div class="impact-stat-card">
-            <div class="impact-stat-icon" style="background:rgba(255,181,71,0.1);color:var(--accent)">🏆</div>
-            <div class="impact-stat-value" style="color:var(--accent)">${stats.rawUsers || '500+'}</div>
+            <div class="impact-stat-icon" style="background:rgba(255,107,90,0.1);color:var(--secondary)">👨‍🎨</div>
+            <div class="impact-stat-value" style="color:var(--secondary)">${stats.users}</div>
             <div class="impact-stat-label">Young Artists</div>
           </div>
           <div class="impact-stat-card">
+            <div class="impact-stat-icon" style="background:rgba(255,181,71,0.1);color:var(--accent)">🏫</div>
+            <div class="impact-stat-value" style="color:var(--accent)">${stats.schools}</div>
+            <div class="impact-stat-label">Schools Registered</div>
+          </div>
+          <div class="impact-stat-card">
             <div class="impact-stat-icon" style="background:rgba(16,185,129,0.1);color:#10B981">📅</div>
-            <div class="impact-stat-value" style="color:#10B981">12</div>
+            <div class="impact-stat-value" style="color:#10B981">${stats.themes}</div>
             <div class="impact-stat-label">Monthly Themes</div>
           </div>
         </div>
@@ -194,10 +185,11 @@ function renderHome() {
       </div>
     </section>
 
-    <!-- PREVIOUS WINNERS -->
+    <!-- WINNERS / CTA -->
     <section class="section container">
+      ${winners.length ? `
       <h2 class="section-title">Gallery of Masters</h2>
-      <p class="section-subtitle">Celebrating the exceptional talent of our previous competition winners.</p>
+      <p class="section-subtitle">Celebrating the exceptional talent of our competition winners.</p>
       <div class="grid-4">
         ${winners.map(w => {
           const rankCls = { 1: 'rank-gold', 2: 'rank-silver', 3: 'rank-bronze' };
@@ -205,7 +197,7 @@ function renderHome() {
           const rankIcon = { 1: '🥇', 2: '🥈', 3: '🥉' };
           const imgBlock = w.fileDataUrl
             ? `<img class="winner-img" src="${w.fileDataUrl}" alt="${escapeHtml(w.title)}" />`
-            : `<div class="winner-img-placeholder" style="background:${w.gradient}"><span style="font-size:3rem">${w.emoji}</span></div>`;
+            : `<div class="winner-img-placeholder" style="background:${w.gradient || 'var(--primary)'}"><span style="font-size:3rem">${w.emoji || '🏆'}</span></div>`;
           return `
           <div class="winner-card">
             ${imgBlock}
@@ -224,6 +216,13 @@ function renderHome() {
       <div class="text-center mt-32">
         <button class="btn btn-outline" onclick="navigate('results')">View All Results &rarr;</button>
       </div>
+      ` : `
+      <div style="text-align:center;padding:20px 0">
+        <h2 class="section-title">Be the First Winner</h2>
+        <p class="section-subtitle">Submit your artwork to this month's competition. Winners will be featured right here.</p>
+        <button class="btn btn-primary btn-lg" onclick="startRegistration()">Submit Your Artwork &rarr;</button>
+      </div>
+      `}
     </section>
 
     <!-- CATEGORIES -->
@@ -965,24 +964,24 @@ function renderAbout() {
             <div class="achievement-label">Artworks Submitted</div>
           </div>
           <div class="achievement-card">
+            <div class="achievement-num">${stats.users}</div>
+            <div class="achievement-label">Registered Artists</div>
+          </div>
+          <div class="achievement-card">
             <div class="achievement-num">${stats.schools}</div>
-            <div class="achievement-label">Participating Schools</div>
+            <div class="achievement-label">Schools Registered</div>
           </div>
           <div class="achievement-card">
-            <div class="achievement-num">12</div>
+            <div class="achievement-num">${stats.themes}</div>
             <div class="achievement-label">Monthly Themes</div>
-          </div>
-          <div class="achievement-card">
-            <div class="achievement-num">28</div>
-            <div class="achievement-label">States Represented</div>
           </div>
           <div class="achievement-card">
             <div class="achievement-num">6</div>
             <div class="achievement-label">Age Categories</div>
           </div>
           <div class="achievement-card">
-            <div class="achievement-num">\u20B942L+</div>
-            <div class="achievement-label">CSR Funds Deployed</div>
+            <div class="achievement-num">12</div>
+            <div class="achievement-label">Months Active</div>
           </div>
         </div>`;
         })()}
@@ -1069,7 +1068,7 @@ function renderContact() {
             <div class="contact-icon">📧</div>
             <div class="contact-details">
               <h4>Email Us</h4>
-              <p>hello@awarenessbyart.in</p>
+              <p>hello@art4awareness.in</p>
               <p style="color:var(--text-muted);font-size:0.8rem">We respond within 24 hours</p>
             </div>
           </div>
@@ -1077,8 +1076,8 @@ function renderContact() {
             <div class="contact-icon">📞</div>
             <div class="contact-details">
               <h4>Call Us</h4>
-              <p>+91 98765 43210</p>
-              <p style="color:var(--text-muted);font-size:0.8rem">Mon-Fri, 10AM - 6PM IST</p>
+              <p>Contact us via email</p>
+              <p style="color:var(--text-muted);font-size:0.8rem">We respond within 24 hours</p>
             </div>
           </div>
           <div class="contact-info-card">
@@ -1093,7 +1092,7 @@ function renderContact() {
             <div class="contact-icon">🤝</div>
             <div class="contact-details">
               <h4>CSR Partnerships</h4>
-              <p>partnerships@awarenessbyart.in</p>
+              <p>partnerships@art4awareness.in</p>
               <p style="color:var(--text-muted);font-size:0.8rem">For corporate sponsors & NGOs</p>
             </div>
           </div>
@@ -1429,6 +1428,7 @@ function renderDashResults(submissions) {
 }
 
 function renderDashProfile(user) {
+  const isSocialUser = !!user.provider;
   return `
     <h3 class="dash-section-title">My Profile</h3>
     <div style="max-width:480px">
@@ -1445,6 +1445,21 @@ function renderDashProfile(user) {
         <input id="prof-mobile" class="form-input" type="tel" value="${escapeHtml(user.mobile || '')}" placeholder="+91 XXXXXXXXXX" />
       </div>
       <button class="form-submit" style="max-width:200px" onclick="updateProfile()">Save Changes</button>
+
+      <h3 class="dash-section-title" style="margin-top:40px">Change Password</h3>
+      <div class="form-group">
+        <label class="form-label" for="prof-curpass">Current Password</label>
+        <input id="prof-curpass" class="form-input" type="password" placeholder="Enter current password" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="prof-newpass">New Password</label>
+        <input id="prof-newpass" class="form-input" type="password" placeholder="Min. 8 characters" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="prof-confirmpass">Confirm New Password</label>
+        <input id="prof-confirmpass" class="form-input" type="password" placeholder="Repeat new password" />
+      </div>
+      <button class="form-submit" style="max-width:200px" onclick="changePassword()">Update Password</button>
     </div>
   `;
 }
@@ -1469,4 +1484,33 @@ function updateProfile() {
   const nameEl = document.querySelector('.sidebar-user h4');
   if (avatarEl) avatarEl.textContent = name.charAt(0).toUpperCase();
   if (nameEl) nameEl.textContent = name;
+}
+
+function changePassword() {
+  const curPass = document.getElementById('prof-curpass')?.value;
+  const newPass = document.getElementById('prof-newpass')?.value;
+  const confirmPass = document.getElementById('prof-confirmpass')?.value;
+  if (!curPass || !newPass || !confirmPass) { showToast('Please fill all password fields', 'error'); return; }
+  if (newPass.length < 8) { showToast('New password must be at least 8 characters', 'error'); return; }
+  if (newPass !== confirmPass) { showToast('New passwords do not match', 'error'); return; }
+
+  const user = AUTH.user;
+  if (!user) { showToast('Please log in', 'error'); return; }
+  const stored = JSON.parse(localStorage.getItem('aba_user_' + user.email) || 'null');
+  if (!stored) { showToast('Account not found', 'error'); return; }
+
+  // Verify current password
+  if (stored.passwordHash && stored.passwordHash !== hashPassword(curPass)) {
+    showToast('Current password is incorrect', 'error');
+    return;
+  }
+
+  // Update password
+  stored.passwordHash = hashPassword(newPass);
+  delete stored.password;
+  localStorage.setItem('aba_user_' + user.email, JSON.stringify(stored));
+  showToast('Password updated successfully!', 'success');
+  document.getElementById('prof-curpass').value = '';
+  document.getElementById('prof-newpass').value = '';
+  document.getElementById('prof-confirmpass').value = '';
 }

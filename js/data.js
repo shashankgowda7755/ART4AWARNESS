@@ -109,33 +109,9 @@ const DATA = {
     }
   ],
 
-  // ─── Previous Winners ───
-  winners: [
-    {
-      id: 1, title: "Silent Wisps", artist: "Aisha Khan", rank: 1,
-      category: "Charcoal", ageGroup: "Age 10–12", event: "Earth Palette", month: "April 2026",
-      gradient: "linear-gradient(135deg, #1d4f5c 0%, #2E6B7A 60%, #3d8fa2 100%)",
-      emoji: "🌍"
-    },
-    {
-      id: 2, title: "Reef Dreams", artist: "Leo Santos", rank: 2,
-      category: "Mixed Media", ageGroup: "Age 16–17", event: "Deep Blue", month: "July 2026",
-      gradient: "linear-gradient(135deg, #004e8c 0%, #0072b1 50%, #00a3e0 100%)",
-      emoji: "🐠"
-    },
-    {
-      id: 3, title: "Canopy Light", artist: "Priya Sharma", rank: 1,
-      category: "Watercolor", ageGroup: "Age 13–15", event: "Nature's Brush", month: "May 2026",
-      gradient: "linear-gradient(135deg, #2d5016 0%, #4a7c2f 50%, #7db845 100%)",
-      emoji: "🌿"
-    },
-    {
-      id: 4, title: "Tiger's Gaze", artist: "Rahul Verma", rank: 3,
-      category: "Oil Pastel", ageGroup: "Age 6–9", event: "Wild India", month: "August 2026",
-      gradient: "linear-gradient(135deg, #b45309 0%, #d97706 50%, #f59e0b 100%)",
-      emoji: "🐯"
-    }
-  ],
+  // ─── Previous Winners (populated from real admin-declared results via localStorage) ───
+  // Static demo data removed — only real results are shown.
+  winners: [],
 
   // ─── Categories ───
   categories: [
@@ -171,21 +147,9 @@ const DATA = {
     }
   ],
 
-  // ─── Gallery Items ───
-  gallery: [
-    { id: 1, title: "Forest Dawn", artist: "Meera Patel", category: "Watercolor", ageGroup: "Age 10–11", month: "March", year: 2026, theme: "Nature", gradient: "linear-gradient(135deg, #134e5e, #71b280)", emoji: "🌲" },
-    { id: 2, title: "City Lights", artist: "Arjun Singh", category: "Digital Art", ageGroup: "Age 14–15", month: "February", year: 2026, theme: "Urban", gradient: "linear-gradient(135deg, #0f0c29, #302b63, #24243e)", emoji: "🏙️" },
-    { id: 3, title: "Ocean's Whisper", artist: "Kavya Nair", category: "Oil Pastel", ageGroup: "Age 8–9", month: "January", year: 2026, theme: "Ocean", gradient: "linear-gradient(135deg, #00467f, #a5cc82)", emoji: "🌊" },
-    { id: 4, title: "Festival of Colors", artist: "Rohan Das", category: "Acrylic", ageGroup: "Age 12–13", month: "March", year: 2026, theme: "Culture", gradient: "linear-gradient(135deg, #f7971e, #ffd200)", emoji: "🎨" },
-    { id: 5, title: "Mountain Peak", artist: "Sneha Roy", category: "Charcoal", ageGroup: "Age 16–17", month: "February", year: 2026, theme: "Nature", gradient: "linear-gradient(135deg, #373b44, #4286f4)", emoji: "⛰️" },
-    { id: 6, title: "Butterfly Garden", artist: "Ananya Kumar", category: "Colored Pencil", ageGroup: "Age 6–7", month: "January", year: 2026, theme: "Nature", gradient: "linear-gradient(135deg, #b24592, #f15f79)", emoji: "🦋" },
-    { id: 7, title: "Street Dreams", artist: "Vikram Shah", category: "Mixed Media", ageGroup: "Age 14–15", month: "March", year: 2026, theme: "Urban", gradient: "linear-gradient(135deg, #232526, #414345)", emoji: "🏘️" },
-    { id: 8, title: "Golden Sunrise", artist: "Preethi Rao", category: "Watercolor", ageGroup: "Age 10–11", month: "February", year: 2026, theme: "Nature", gradient: "linear-gradient(135deg, #f7971e, #ffd200)", emoji: "🌅" },
-    { id: 9, title: "Village Life", artist: "Deepak Sharma", category: "Oil Pastel", ageGroup: "Age 12–13", month: "January", year: 2026, theme: "Culture", gradient: "linear-gradient(135deg, #56ab2f, #a8e063)", emoji: "🌾" },
-    { id: 10, title: "Dragon Dreams", artist: "Ishaan Mehta", category: "Digital Art", ageGroup: "Age 8–9", month: "March", year: 2026, theme: "Fantasy", gradient: "linear-gradient(135deg, #c94b4b, #4b134f)", emoji: "🐉" },
-    { id: 11, title: "Rain Dance", artist: "Tara Pillai", category: "Acrylic", ageGroup: "Age 16–17", month: "February", year: 2026, theme: "Culture", gradient: "linear-gradient(135deg, #4facfe, #00f2fe)", emoji: "💧" },
-    { id: 12, title: "Midnight Bloom", artist: "Anika Gupta", category: "Charcoal", ageGroup: "Age 6–7", month: "January", year: 2026, theme: "Fantasy", gradient: "linear-gradient(135deg, #2c3e50, #fd746c)", emoji: "🌸" }
-  ],
+  // ─── Gallery Items (populated from real admin-approved submissions via localStorage) ───
+  // Static demo data removed — only real approved submissions are shown.
+  gallery: [],
 
   // ─── FAQs ───
   faqs: [
@@ -207,7 +171,7 @@ const DATA = {
     },
     {
       q: "How do I receive my participation certificate?",
-      a: "Certificates are auto-generated and available to download from your My Account dashboard immediately after successful submission. Winner certificates are issued after results are declared."
+      a: "Certificates are available to download from your Dashboard once results are declared by our jury. Both participation and winner certificates are issued after each month's results announcement."
     },
     {
       q: "Is there any registration fee or participation cost?",
@@ -273,10 +237,10 @@ const DATA = {
 
   // ─── Jury ───
   jury: [
-    { name: "Mr. Venkatesh Desai", role: "Art Teacher", school: "Mallya Aditi International School, Bengaluru", emoji: "👨‍🎨" },
-    { name: "Ms. Veena Karki", role: "HOD - Visual Art", school: "Shiv Nadar School, Gurugram", emoji: "👩‍🎨" },
-    { name: "Mr. Jay Salian", role: "HOD Art Department", school: "A.M. Naik School, Mumbai", emoji: "🎭" },
-    { name: "Ms. Tanima Bhattacharya", role: "Eminent Professional Painter", school: "Professional Artist, Kolkata", emoji: "🖼️" }
+    { name: "Art Educator", role: "Art Teacher", school: "National-level school, Bengaluru", emoji: "👨‍🎨" },
+    { name: "Visual Art Expert", role: "HOD - Visual Art", school: "Renowned school, Gurugram", emoji: "👩‍🎨" },
+    { name: "Art Department Head", role: "Senior Art Faculty", school: "Leading school, Mumbai", emoji: "🎭" },
+    { name: "Professional Painter", role: "Eminent Artist", school: "Professional Artist, Kolkata", emoji: "🖼️" }
   ]
 };
 

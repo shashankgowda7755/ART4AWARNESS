@@ -99,15 +99,6 @@
     <button class="modal-close" onclick="closeModal('login-modal')" aria-label="Close">&times;</button>
     <h2>Welcome Back</h2>
     <p class="modal-desc">Sign in to your Art for Awareness account.</p>
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-      <button class="social-btn" onclick="socialLogin('Google')">
-        <span>🔵</span> Continue with Google
-      </button>
-      <button class="social-btn" onclick="socialLogin('Facebook')">
-        <span>📘</span> Continue with Facebook
-      </button>
-    </div>
-    <div class="form-divider">or sign in with email</div>
     <div class="form-group">
       <label class="form-label" for="login-email">Email Address</label>
       <input id="login-email" class="form-input" type="email" placeholder="you@example.com" />
@@ -239,27 +230,6 @@
       </div>
       <button class="form-submit" onclick="resetPassword()">Reset Password</button>
     </div>
-  </div>
-</div>
-
-<!-- EMAIL VERIFICATION MODAL -->
-<div id="verify-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Verify Email">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('verify-modal')" aria-label="Close">&times;</button>
-    <div style="text-align:center">
-      <div style="font-size:2.5rem;margin-bottom:8px">&#9993;</div>
-      <h2>Verify Your Email</h2>
-      <p class="modal-desc">A 6-digit verification code has been sent to your email.</p>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="verify-code">Verification Code</label>
-      <input id="verify-code" class="form-input" type="text" placeholder="Enter 6-digit code" maxlength="6" style="text-align:center;font-size:1.2rem;letter-spacing:0.3em" />
-    </div>
-    <p id="verify-hint" style="font-size:0.78rem;color:var(--primary);text-align:center;margin-bottom:16px"></p>
-    <button class="form-submit" onclick="verifyEmail()">Verify &amp; Continue</button>
-    <p style="text-align:center;margin-top:12px;font-size:0.82rem;color:var(--text-muted)">
-      Didn't receive it? <a href="javascript:void(0)" onclick="resendVerifyCode()" style="color:var(--primary);font-weight:600">Resend Code</a>
-    </p>
   </div>
 </div>
 

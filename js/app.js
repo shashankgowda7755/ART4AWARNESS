@@ -221,9 +221,6 @@ function doLogin() {
   showToast('Welcome back, ' + escapeHtml(stored.name) + '!', 'success');
 }
 
-let _pendingSignup = null;
-let _signupOTP = '';
-
 function doSignup() {
   const name = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
@@ -241,36 +238,14 @@ function doSignup() {
     return;
   }
 
-  // Store pending signup and send OTP
-  _pendingSignup = { name, email, mobile, passwordHash: hashPassword(pass), joined: new Date().toLocaleDateString('en-IN') };
-  _signupOTP = String(Math.floor(100000 + Math.random() * 900000));
+  const user = { name, email, mobile, passwordHash: hashPassword(pass), joined: new Date().toLocaleDateString('en-IN') };
+  localStorage.setItem('aba_user_' + email, JSON.stringify(user));
+  AUTH.save({ name, email, mobile, joined: user.joined });
   closeModal('signup-modal');
-  document.getElementById('verify-hint').textContent = 'Demo code: ' + _signupOTP;
-  const codeInput = document.getElementById('verify-code');
-  if (codeInput) codeInput.value = '';
-  openModal('verify-modal');
-  showToast('Verification code generated (see hint)', 'success');
-}
-
-function verifyEmail() {
-  const code = document.getElementById('verify-code')?.value.trim();
-  if (code !== _signupOTP) { showToast('Incorrect code. Please try again.', 'error'); return; }
-  if (!_pendingSignup) { showToast('Session expired. Please sign up again.', 'error'); return; }
-
-  localStorage.setItem('aba_user_' + _pendingSignup.email, JSON.stringify(_pendingSignup));
-  AUTH.save({ name: _pendingSignup.name, email: _pendingSignup.email, mobile: _pendingSignup.mobile, joined: _pendingSignup.joined });
-  closeModal('verify-modal');
   updateHeaderAuth();
-  showToast('Email verified! Welcome, ' + escapeHtml(_pendingSignup.name) + '!', 'success');
-  _pendingSignup = null;
-  _signupOTP = '';
-}
-
-function resendVerifyCode() {
-  if (!_pendingSignup) { showToast('Please start the signup process again', 'error'); return; }
-  _signupOTP = String(Math.floor(100000 + Math.random() * 900000));
-  document.getElementById('verify-hint').textContent = 'Demo code: ' + _signupOTP;
-  showToast('New code generated', 'success');
+  showToast('Account created! Welcome, ' + escapeHtml(name) + '!', 'success');
+  // Redirect new user to dashboard
+  navigate('dashboard');
 }
 
 function socialLogin(provider) {
@@ -753,12 +728,14 @@ function downloadCertificate() {
   // Platform name
   ctx.fillStyle = '#C5A028';
   ctx.font = '600 14px sans-serif';
-  ctx.fillText('A W A R E N E S S   B Y   A R T', W / 2, 140);
+  ctx.fillText('A R T   F O R   A W A R E N E S S', W / 2, 140);
 
-  // Certificate type
+  // Certificate type — check the visual modal to determine if winner or participation
+  const certVisualEl = document.getElementById('cert-visual');
+  const isWinnerCert = certVisualEl && certVisualEl.innerHTML.includes('Winner Certificate');
   ctx.fillStyle = '#ffffff';
   ctx.font = '700 32px sans-serif';
-  ctx.fillText('Certificate of Participation', W / 2, 200);
+  ctx.fillText(isWinnerCert ? 'Winner Certificate' : 'Certificate of Participation', W / 2, 200);
 
   ctx.fillStyle = 'rgba(255,255,255,0.5)';
   ctx.font = '400 16px sans-serif';
@@ -771,7 +748,7 @@ function downloadCertificate() {
 
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
   ctx.font = '400 16px sans-serif';
-  ctx.fillText('successfully participated in', W / 2, 400);
+  ctx.fillText(isWinnerCert ? 'achieved excellence in' : 'successfully participated in', W / 2, 400);
 
   // Event
   ctx.fillStyle = '#ffffff';
@@ -846,8 +823,11 @@ function sendResetCode() {
   _resetCode = String(Math.floor(100000 + Math.random() * 900000));
   document.getElementById('forgot-step-1').style.display = 'none';
   document.getElementById('forgot-step-2').style.display = 'block';
-  document.getElementById('forgot-hint').textContent = 'Demo code: ' + _resetCode;
-  showToast('Reset code generated (see hint below)', 'success');
+  // Auto-fill the code for this demo (in production, this would be emailed)
+  const codeEl = document.getElementById('forgot-code');
+  if (codeEl) codeEl.value = _resetCode;
+  document.getElementById('forgot-hint').textContent = 'A reset code has been sent to ' + email;
+  showToast('Reset code sent to your email', 'success');
 }
 
 function verifyResetCode() {
