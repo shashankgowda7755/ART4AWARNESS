@@ -117,8 +117,9 @@
       <input id="login-password" class="form-input" type="password" placeholder="••••••••" />
     </div>
     <button class="form-submit" onclick="doLogin()">Sign In</button>
-    <p style="text-align:center;margin-top:16px;font-size:0.85rem;color:var(--text-muted)">
-      Don't have an account? <a href="#" onclick="switchToSignup()" style="color:var(--primary);font-weight:700">Create one free</a>
+    <p style="text-align:center;margin-top:12px;font-size:0.82rem"><a href="javascript:void(0)" onclick="openForgotPassword()" style="color:var(--text-muted)">Forgot your password?</a></p>
+    <p style="text-align:center;margin-top:8px;font-size:0.85rem;color:var(--text-muted)">
+      Don't have an account? <a href="javascript:void(0)" onclick="switchToSignup()" style="color:var(--primary);font-weight:700">Create one free</a>
     </p>
   </div>
 </div>
@@ -147,9 +148,15 @@
       <label class="form-label" for="signup-password">Password</label>
       <input id="signup-password" class="form-input" type="password" placeholder="Min. 8 characters" />
     </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:flex;align-items:flex-start;gap:8px;cursor:pointer;font-size:0.85rem;color:var(--text-secondary)">
+        <input type="checkbox" id="signup-terms" style="margin-top:3px;width:16px;height:16px;flex-shrink:0" />
+        I agree to the <a href="javascript:void(0)" onclick="openModal('terms-modal')" style="color:var(--primary);font-weight:600">Terms &amp; Conditions</a>
+      </label>
+    </div>
     <button class="form-submit" onclick="doSignup()">Create My Free Account</button>
     <p style="text-align:center;margin-top:16px;font-size:0.85rem;color:var(--text-muted)">
-      Already have an account? <a href="#" onclick="switchToLogin()" style="color:var(--primary);font-weight:700">Sign in</a>
+      Already have an account? <a href="javascript:void(0)" onclick="switchToLogin()" style="color:var(--primary);font-weight:700">Sign in</a>
     </p>
   </div>
 </div>
@@ -193,6 +200,66 @@
       <p style="margin-top:12px"><strong>6. Environmental Commitment</strong><br>All platform surplus funds after operations are transferred to SankalpTaru or SayTrees for verified tree plantation with blockchain tracking.</p>
     </div>
     <button class="form-submit" style="margin-top:24px" onclick="closeModal('terms-modal')">I Understand</button>
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div id="forgot-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Reset Password">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('forgot-modal')" aria-label="Close">&times;</button>
+    <div id="forgot-step-1">
+      <h2>Reset Password</h2>
+      <p class="modal-desc">Enter your registered email address. We'll send you a reset code.</p>
+      <div class="form-group">
+        <label class="form-label" for="forgot-email">Email Address</label>
+        <input id="forgot-email" class="form-input" type="email" placeholder="you@example.com" />
+      </div>
+      <button class="form-submit" onclick="sendResetCode()">Send Reset Code</button>
+    </div>
+    <div id="forgot-step-2" style="display:none">
+      <h2>Enter Code</h2>
+      <p class="modal-desc">A 6-digit code has been sent to your email. Enter it below.</p>
+      <div class="form-group">
+        <label class="form-label" for="forgot-code">Reset Code</label>
+        <input id="forgot-code" class="form-input" type="text" placeholder="123456" maxlength="6" />
+      </div>
+      <p id="forgot-hint" style="font-size:0.78rem;color:var(--primary);margin-bottom:16px"></p>
+      <button class="form-submit" onclick="verifyResetCode()">Verify Code</button>
+    </div>
+    <div id="forgot-step-3" style="display:none">
+      <h2>Set New Password</h2>
+      <p class="modal-desc">Choose a strong new password (min 8 characters).</p>
+      <div class="form-group">
+        <label class="form-label" for="forgot-newpass">New Password</label>
+        <input id="forgot-newpass" class="form-input" type="password" placeholder="Min. 8 characters" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="forgot-confirm">Confirm Password</label>
+        <input id="forgot-confirm" class="form-input" type="password" placeholder="Repeat new password" />
+      </div>
+      <button class="form-submit" onclick="resetPassword()">Reset Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL VERIFICATION MODAL -->
+<div id="verify-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Verify Email">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('verify-modal')" aria-label="Close">&times;</button>
+    <div style="text-align:center">
+      <div style="font-size:2.5rem;margin-bottom:8px">&#9993;</div>
+      <h2>Verify Your Email</h2>
+      <p class="modal-desc">A 6-digit verification code has been sent to your email.</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="verify-code">Verification Code</label>
+      <input id="verify-code" class="form-input" type="text" placeholder="Enter 6-digit code" maxlength="6" style="text-align:center;font-size:1.2rem;letter-spacing:0.3em" />
+    </div>
+    <p id="verify-hint" style="font-size:0.78rem;color:var(--primary);text-align:center;margin-bottom:16px"></p>
+    <button class="form-submit" onclick="verifyEmail()">Verify &amp; Continue</button>
+    <p style="text-align:center;margin-top:12px;font-size:0.82rem;color:var(--text-muted)">
+      Didn't receive it? <a href="javascript:void(0)" onclick="resendVerifyCode()" style="color:var(--primary);font-weight:600">Resend Code</a>
+    </p>
   </div>
 </div>
 

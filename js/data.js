@@ -259,6 +259,53 @@ try {
   }
 } catch (e) { /* ignore */ }
 
+// ─── Shared helpers to read submissions across all users ───
+// Used by both the public site (Results/Gallery pages) and the admin panel
+// to surface real user activity instead of static demo data.
+function getAllSubmissionsAcrossUsers() {
+  const all = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key || !key.startsWith('aba_submissions_')) continue;
+    const email = key.replace('aba_submissions_', '');
+    try {
+      const subs = JSON.parse(localStorage.getItem(key) || '[]');
+      subs.forEach(s => all.push({ ...s, userEmail: email }));
+    } catch (e) { /* skip */ }
+  }
+  return all.sort((a, b) => (b.id || 0) - (a.id || 0));
+}
+
+function getAllRegisteredUsers() {
+  const users = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (!key || !key.startsWith('aba_user_') || key === 'aba_user') continue;
+    try {
+      const u = JSON.parse(localStorage.getItem(key));
+      if (u && u.email && u.email !== 'admin@awarenessbyart.in') users.push(u);
+    } catch (e) { /* skip */ }
+  }
+  return users;
+}
+
+// Default gradients/emojis for submissions that don't have them (visual fallback)
+const DEFAULT_GRADIENTS = [
+  'linear-gradient(135deg, #134e5e, #71b280)',
+  'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
+  'linear-gradient(135deg, #00467f, #a5cc82)',
+  'linear-gradient(135deg, #f7971e, #ffd200)',
+  'linear-gradient(135deg, #373b44, #4286f4)',
+  'linear-gradient(135deg, #b24592, #f15f79)',
+  'linear-gradient(135deg, #232526, #414345)',
+  'linear-gradient(135deg, #56ab2f, #a8e063)',
+];
+function defaultGradient(seed) {
+  let h = 0;
+  for (let i = 0; i < (seed || '').length; i++) { h = ((h << 5) - h) + (seed || '').charCodeAt(i); h |= 0; }
+  return DEFAULT_GRADIENTS[Math.abs(h) % DEFAULT_GRADIENTS.length];
+}
+
 // Auth state (localStorage based)
 const AUTH = {
   get user() { try { return JSON.parse(localStorage.getItem('aba_user')) || null; } catch { return null; } },
@@ -270,7 +317,15 @@ const AUTH = {
   },
   addSubmission(sub) {
     const subs = this.getSubmissions();
-    subs.unshift({ ...sub, id: Date.now(), date: new Date().toLocaleDateString('en-IN'), status: 'Under Review', resultStatus: null });
+    const record = {
+      ...sub,
+      id: Date.now(),
+      date: new Date().toLocaleDateString('en-IN'),
+      status: 'Under Review',
+      resultStatus: null,
+      userName: this.user?.name || '',
+    };
+    subs.unshift(record);
     localStorage.setItem('aba_submissions_' + this.user.email, JSON.stringify(subs));
     return subs[0];
   }

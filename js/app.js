@@ -75,7 +75,7 @@ function renderPage() {
     dashboard: renderDashboard,
   };
 
-  const fn = pages[page] || renderHome;
+  const fn = pages[page] || (typeof render404 === 'function' ? render404 : renderHome);
   outlet.innerHTML = '';
 
   // Re-trigger fade animation on SPA navigation
@@ -221,29 +221,56 @@ function doLogin() {
   showToast('Welcome back, ' + escapeHtml(stored.name) + '!', 'success');
 }
 
+let _pendingSignup = null;
+let _signupOTP = '';
+
 function doSignup() {
   const name = document.getElementById('signup-name').value.trim();
   const email = document.getElementById('signup-email').value.trim();
   const mobile = document.getElementById('signup-mobile').value.trim();
   const pass = document.getElementById('signup-password').value;
+  const terms = document.getElementById('signup-terms')?.checked;
 
   if (!name || !email || !pass) { showToast('Please fill all required fields', 'error'); return; }
   if (!isValidEmail(email)) { showToast('Please enter a valid email address', 'error'); return; }
   if (pass.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
+  if (!terms) { showToast('Please agree to the Terms & Conditions', 'error'); return; }
 
-  // Check if account already exists
   if (localStorage.getItem('aba_user_' + email)) {
     showToast('An account with this email already exists. Please sign in.', 'error');
     return;
   }
 
-  const user = { name, email, mobile, passwordHash: hashPassword(pass), joined: new Date().toLocaleDateString('en-IN') };
-  localStorage.setItem('aba_user_' + email, JSON.stringify(user));
-
-  AUTH.save({ name, email, mobile, joined: user.joined });
+  // Store pending signup and send OTP
+  _pendingSignup = { name, email, mobile, passwordHash: hashPassword(pass), joined: new Date().toLocaleDateString('en-IN') };
+  _signupOTP = String(Math.floor(100000 + Math.random() * 900000));
   closeModal('signup-modal');
+  document.getElementById('verify-hint').textContent = 'Demo code: ' + _signupOTP;
+  const codeInput = document.getElementById('verify-code');
+  if (codeInput) codeInput.value = '';
+  openModal('verify-modal');
+  showToast('Verification code generated (see hint)', 'success');
+}
+
+function verifyEmail() {
+  const code = document.getElementById('verify-code')?.value.trim();
+  if (code !== _signupOTP) { showToast('Incorrect code. Please try again.', 'error'); return; }
+  if (!_pendingSignup) { showToast('Session expired. Please sign up again.', 'error'); return; }
+
+  localStorage.setItem('aba_user_' + _pendingSignup.email, JSON.stringify(_pendingSignup));
+  AUTH.save({ name: _pendingSignup.name, email: _pendingSignup.email, mobile: _pendingSignup.mobile, joined: _pendingSignup.joined });
+  closeModal('verify-modal');
   updateHeaderAuth();
-  showToast('Account created! Welcome, ' + escapeHtml(name) + '!', 'success');
+  showToast('Email verified! Welcome, ' + escapeHtml(_pendingSignup.name) + '!', 'success');
+  _pendingSignup = null;
+  _signupOTP = '';
+}
+
+function resendVerifyCode() {
+  if (!_pendingSignup) { showToast('Please start the signup process again', 'error'); return; }
+  _signupOTP = String(Math.floor(100000 + Math.random() * 900000));
+  document.getElementById('verify-hint').textContent = 'Demo code: ' + _signupOTP;
+  showToast('New code generated', 'success');
 }
 
 function socialLogin(provider) {
@@ -303,6 +330,11 @@ function subscribeNewsletter() {
   const email = input?.value.trim();
   if (!email) { showToast('Please enter your email', 'error'); return; }
   if (!isValidEmail(email)) { showToast('Please enter a valid email address', 'error'); return; }
+  // Persist subscriber
+  try {
+    const subs = JSON.parse(localStorage.getItem('aba_newsletter_subscribers') || '[]');
+    if (!subs.includes(email)) { subs.push(email); localStorage.setItem('aba_newsletter_subscribers', JSON.stringify(subs)); }
+  } catch (e) { /* quota */ }
   showToast('Subscribed! Thank you!', 'success');
   if (input) input.value = '';
 }
@@ -363,7 +395,13 @@ function renderRegStep() {
         <input id="rf-school" class="form-input" placeholder="Your school name" value="${escapeHtml(regData.school || '')}" /></div>
       <button class="form-submit" onclick="regNext()">Continue \u2192</button>`;
   } else if (regStep === 2) {
-    const evts = DATA.events.filter(e => e.type === 'competition');
+    // Only show upcoming or current-month competitions (not past events)
+    const now = new Date();
+    const evts = DATA.events.filter(e => {
+      if (e.type !== 'competition') return false;
+      const evDate = new Date(e.year, (e.month || 1) - 1, e.day || 28); // use late in month to be lenient
+      return evDate >= new Date(now.getFullYear(), now.getMonth(), 1); // from start of current month
+    });
     body = `
       <h3 style="margin-bottom:24px">Select Event &amp; Theme</h3>
       <div class="form-group"><label class="form-label" for="rf-event">Competition Event *</label>
@@ -515,7 +553,32 @@ function regNext() {
     regData.artTitle = title;
     regData.artDesc = document.getElementById('rf-art-desc')?.value;
     if (AUTH.isLoggedIn()) {
-      AUTH.addSubmission({ artTitle: regData.artTitle, event: regData.event, medium: regData.medium, category: regData.category, school: regData.school });
+      try {
+        AUTH.addSubmission({
+          artTitle: regData.artTitle,
+          artDesc: regData.artDesc,
+          event: regData.event,
+          medium: regData.medium,
+          category: regData.category,
+          school: regData.school,
+          fileDataUrl: regData.fileDataUrl,
+        });
+      } catch (err) {
+        // localStorage quota exceeded — try again without the image
+        if (err && (err.name === 'QuotaExceededError' || err.code === 22)) {
+          showToast('Storage full — saving submission without image preview', 'error');
+          AUTH.addSubmission({
+            artTitle: regData.artTitle,
+            artDesc: regData.artDesc,
+            event: regData.event,
+            medium: regData.medium,
+            category: regData.category,
+            school: regData.school,
+          });
+        } else {
+          throw err;
+        }
+      }
     }
   }
   if (regStep < 4) { regStep++; renderRegStep(); }
@@ -551,15 +614,52 @@ function validateAndPreviewFile(file) {
     regData.fileSelected = false; return;
   }
   if (errEl) errEl.style.display = 'none';
+
+  // Read full image for preview AND generate a compressed thumbnail for storage
   const reader = new FileReader();
   reader.onload = ev => {
-    if (previewImg) previewImg.src = ev.target.result;
+    const fullDataUrl = ev.target.result;
+    if (previewImg) previewImg.src = fullDataUrl;
     if (preview) preview.style.display = 'block';
     regData.fileSelected = true;
-    regData.fileDataUrl = ev.target.result;
-    showToast('Artwork uploaded successfully', 'success');
+
+    // Compress to ~800px wide JPEG for localStorage (avoids quota errors)
+    compressImage(fullDataUrl, 800, 0.85).then(compressed => {
+      regData.fileDataUrl = compressed;
+      regData.fileOriginalName = file.name;
+      showToast('Artwork uploaded successfully', 'success');
+    }).catch(() => {
+      // Fallback to full image if compression fails
+      regData.fileDataUrl = fullDataUrl;
+      regData.fileOriginalName = file.name;
+      showToast('Artwork uploaded successfully', 'success');
+    });
   };
   reader.readAsDataURL(file);
+}
+
+// Compress a dataURL-encoded image to a smaller JPEG for localStorage storage.
+function compressImage(dataUrl, maxWidth, quality) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const scale = Math.min(1, maxWidth / img.width);
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff'; // white background for transparent PNGs
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      } catch (err) { reject(err); }
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
 }
 
 // ─── Certificate Generator (Canvas-based real PNG download) ───
@@ -723,6 +823,58 @@ function toggleMobileMenu() {
   if (nav) nav.classList.toggle('open');
 }
 
+// ─── Forgot Password flow ───
+let _resetEmail = '';
+let _resetCode = '';
+
+function openForgotPassword() {
+  closeModal('login-modal');
+  document.getElementById('forgot-step-1').style.display = 'block';
+  document.getElementById('forgot-step-2').style.display = 'none';
+  document.getElementById('forgot-step-3').style.display = 'none';
+  const el = document.getElementById('forgot-email');
+  if (el) el.value = '';
+  openModal('forgot-modal');
+}
+
+function sendResetCode() {
+  const email = document.getElementById('forgot-email')?.value.trim();
+  if (!email || !isValidEmail(email)) { showToast('Please enter a valid email', 'error'); return; }
+  const stored = JSON.parse(localStorage.getItem('aba_user_' + email) || 'null');
+  if (!stored) { showToast('No account found with this email', 'error'); return; }
+  _resetEmail = email;
+  _resetCode = String(Math.floor(100000 + Math.random() * 900000));
+  document.getElementById('forgot-step-1').style.display = 'none';
+  document.getElementById('forgot-step-2').style.display = 'block';
+  document.getElementById('forgot-hint').textContent = 'Demo code: ' + _resetCode;
+  showToast('Reset code generated (see hint below)', 'success');
+}
+
+function verifyResetCode() {
+  const code = document.getElementById('forgot-code')?.value.trim();
+  if (code !== _resetCode) { showToast('Incorrect code. Please try again.', 'error'); return; }
+  document.getElementById('forgot-step-2').style.display = 'none';
+  document.getElementById('forgot-step-3').style.display = 'block';
+  showToast('Code verified! Set your new password.', 'success');
+}
+
+function resetPassword() {
+  const pass = document.getElementById('forgot-newpass')?.value;
+  const confirm = document.getElementById('forgot-confirm')?.value;
+  if (!pass || pass.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
+  if (pass !== confirm) { showToast('Passwords do not match', 'error'); return; }
+  const stored = JSON.parse(localStorage.getItem('aba_user_' + _resetEmail) || 'null');
+  if (!stored) { showToast('Account not found', 'error'); return; }
+  stored.passwordHash = hashPassword(pass);
+  delete stored.password;
+  localStorage.setItem('aba_user_' + _resetEmail, JSON.stringify(stored));
+  closeModal('forgot-modal');
+  _resetEmail = '';
+  _resetCode = '';
+  showToast('Password reset successfully! You can now sign in.', 'success');
+  openLoginModal();
+}
+
 // ─── Enter-key form submission ───
 document.addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
@@ -731,4 +883,7 @@ document.addEventListener('keydown', e => {
   else if (t.id === 'signup-name' || t.id === 'signup-email' || t.id === 'signup-mobile' || t.id === 'signup-password') { e.preventDefault(); doSignup(); }
   else if (t.id === 'contact-name' || t.id === 'contact-email') { e.preventDefault(); if (typeof submitContactForm === 'function') submitContactForm(); }
   else if (t.id === 'newsletter-email') { e.preventDefault(); subscribeNewsletter(); }
+  else if (t.id === 'forgot-email') { e.preventDefault(); sendResetCode(); }
+  else if (t.id === 'forgot-code') { e.preventDefault(); verifyResetCode(); }
+  else if (t.id === 'forgot-newpass' || t.id === 'forgot-confirm') { e.preventDefault(); resetPassword(); }
 });

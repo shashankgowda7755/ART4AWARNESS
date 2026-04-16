@@ -2,6 +2,52 @@
 //  AWARENESS BY ART — Page Renderers & Init Hooks
 // ============================================
 
+// ─── 404 Page ───
+function render404() {
+  const el = document.createElement('div');
+  el.innerHTML = `
+    <section style="min-height:70vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:48px 24px">
+      <div>
+        <div style="font-size:6rem;margin-bottom:16px;opacity:0.3">🎨</div>
+        <h1 style="font-size:4rem;color:var(--primary);margin-bottom:8px">404</h1>
+        <h2 style="margin-bottom:16px">Page Not Found</h2>
+        <p style="color:var(--text-secondary);max-width:400px;margin:0 auto 32px">The page you're looking for doesn't exist or has been moved. Let's get you back on track.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="navigate('home')">Go Home</button>
+          <button class="btn btn-outline" onclick="navigate('events')">View Events</button>
+        </div>
+      </div>
+    </section>`;
+  return el;
+}
+
+// ─── Platform-wide computed stats (baseline + real activity) ───
+// We blend a baseline (representing historical pilot data) with real submissions
+// from localStorage so the home page reflects actual community activity.
+function computePlatformStats() {
+  const subs = (typeof getAllSubmissionsAcrossUsers === 'function') ? getAllSubmissionsAcrossUsers() : [];
+  const users = (typeof getAllRegisteredUsers === 'function') ? getAllRegisteredUsers() : [];
+  const realSchools = new Set(subs.map(s => s.school).filter(Boolean));
+  const baseArtworks = 24500;
+  const baseSchools = 1200;
+  const baseTrees = 8400;
+  const artworks = baseArtworks + subs.length;
+  const schools = baseSchools + realSchools.size;
+  const trees = baseTrees + (subs.length * 3);
+  const co2Tonnes = Math.round(trees * 0.02); // ~20kg CO2 per tree per year
+  return {
+    artworks: artworks.toLocaleString('en-IN'),
+    schools: schools.toLocaleString('en-IN') + (realSchools.size === 0 ? '+' : ''),
+    trees: trees.toLocaleString('en-IN'),
+    co2: co2Tonnes + ' T',
+    rawArtworks: artworks,
+    rawSchools: schools,
+    rawTrees: trees,
+    rawUsers: users.length,
+  };
+}
+
+
 // ═══════════════════════════════════════════════
 //  HOME PAGE
 // ═══════════════════════════════════════════════
@@ -23,7 +69,23 @@ function renderHome() {
   const upcoming = allCompetitions.filter(e => e._date >= today).sort((a, b) => a._date - b._date);
   const past = allCompetitions.filter(e => e._date < today).sort((a, b) => b._date - a._date);
   const upcomingEvents = [...upcoming, ...past].slice(0, 3);
-  const winners = DATA.winners;
+  // Gallery of Masters — real admin-declared winners first, then static demo winners
+  const realWinnerSubs = getAllSubmissionsAcrossUsers().filter(s => s.resultStatus === 'Winner');
+  const realWinnerCards = realWinnerSubs.slice(0, 4).map(s => ({
+    id: 'real_' + s.id,
+    title: s.artTitle || 'Untitled',
+    artist: s.userName || (s.userEmail || '').split('@')[0],
+    rank: 1,
+    category: s.medium || 'Mixed Media',
+    ageGroup: s.category || 'Open',
+    event: s.event,
+    month: s.date,
+    gradient: defaultGradient((s.artTitle || '') + (s.userEmail || '')),
+    emoji: '🏆',
+    fileDataUrl: s.fileDataUrl,
+  }));
+  const needDemo = Math.max(0, 4 - realWinnerCards.length);
+  const winners = [...realWinnerCards, ...DATA.winners.slice(0, needDemo)];
   const categories = DATA.categories;
   const prizes = DATA.prizes;
   const faqs = DATA.faqs;
@@ -55,15 +117,19 @@ function renderHome() {
       </div>
     </section>
 
-    <!-- IMPACT DASHBOARD -->
+    <!-- IMPACT DASHBOARD (baseline + real-time community contributions) -->
+    ${(() => {
+      const stats = computePlatformStats();
+      return `
     <section class="stats-bar">
       <div class="stats-inner">
-        <div class="stat-item"><div class="stat-num">24,500+</div><div class="stat-label">Artworks Created</div></div>
-        <div class="stat-item"><div class="stat-num">1,200+</div><div class="stat-label">Schools Participating</div></div>
-        <div class="stat-item"><div class="stat-num">8,400</div><div class="stat-label">Trees Planted</div></div>
-        <div class="stat-item"><div class="stat-num">168 T</div><div class="stat-label">CO₂ Sequestered</div></div>
+        <div class="stat-item"><div class="stat-num">${stats.artworks}</div><div class="stat-label">Artworks Created</div></div>
+        <div class="stat-item"><div class="stat-num">${stats.schools}</div><div class="stat-label">Schools Participating</div></div>
+        <div class="stat-item"><div class="stat-num">${stats.trees}</div><div class="stat-label">Trees Planted</div></div>
+        <div class="stat-item"><div class="stat-num">${stats.co2}</div><div class="stat-label">CO₂ Sequestered</div></div>
       </div>
-    </section>
+    </section>`;
+    })()}
 
     <!-- UPCOMING EVENTS -->
     <section class="section container" style="padding-top:0">
@@ -119,18 +185,19 @@ function renderHome() {
           const rankCls = { 1: 'rank-gold', 2: 'rank-silver', 3: 'rank-bronze' };
           const rankLabel = { 1: '1st Place', 2: '2nd Place', 3: '3rd Place' };
           const rankIcon = { 1: '🥇', 2: '🥈', 3: '🥉' };
+          const imgBlock = w.fileDataUrl
+            ? `<img class="winner-img" src="${w.fileDataUrl}" alt="${escapeHtml(w.title)}" />`
+            : `<div class="winner-img-placeholder" style="background:${w.gradient}"><span style="font-size:3rem">${w.emoji}</span></div>`;
           return `
           <div class="winner-card">
-            <div class="winner-img-placeholder" style="background:${w.gradient}">
-              <span style="font-size:3rem">${w.emoji}</span>
-            </div>
-            <span class="winner-rank-badge ${rankCls[w.rank]}">${rankIcon[w.rank]} ${rankLabel[w.rank]}</span>
+            ${imgBlock}
+            <span class="winner-rank-badge ${rankCls[w.rank] || 'rank-gold'}">${rankIcon[w.rank] || '🏆'} ${rankLabel[w.rank] || 'Winner'}</span>
             <div class="winner-info">
-              <h4 class="winner-name">${w.title}</h4>
-              <p class="winner-artist">by ${w.artist}</p>
+              <h4 class="winner-name">${escapeHtml(w.title)}</h4>
+              <p class="winner-artist">by ${escapeHtml(w.artist)}</p>
               <div class="winner-meta">
-                <span class="winner-category">${w.category}</span>
-                <span class="winner-age">${w.ageGroup}</span>
+                <span class="winner-category">${escapeHtml(w.category)}</span>
+                <span class="winner-age">${escapeHtml(w.ageGroup)}</span>
               </div>
             </div>
           </div>`;
@@ -495,8 +562,29 @@ function showEventDetail(id) {
 // ═══════════════════════════════════════════════
 function renderResults() {
   const el = document.createElement('div');
-  const winners = DATA.winners;
-  const allEvents = [...new Set(DATA.winners.map(w => w.event))];
+
+  // Build merged list: real admin-declared winners first, then static demo winners as fallback
+  const realDeclared = getAllSubmissionsAcrossUsers().filter(s => s.resultStatus === 'Winner' || s.resultStatus === 'Participated');
+  const realWinners = realDeclared.filter(s => s.resultStatus === 'Winner').map((s, idx) => ({
+    id: 'real_' + s.id,
+    title: s.artTitle,
+    artist: s.userName || (s.userEmail || '').split('@')[0],
+    rank: 1,
+    category: s.medium || s.category || '-',
+    ageGroup: s.category || '-',
+    event: s.event || '-',
+    month: s.date || '-',
+    gradient: defaultGradient(s.artTitle + s.userEmail),
+    emoji: '🏆',
+    fileDataUrl: s.fileDataUrl,
+    isReal: true,
+  }));
+
+  const demoWinners = DATA.winners.map(w => ({ ...w, isReal: false }));
+  const winners = [...realWinners, ...demoWinners];
+  const totalTrees = getAllSubmissionsAcrossUsers().length * 3;
+
+  const allEvents = [...new Set(winners.map(w => w.event).filter(Boolean))];
 
   el.innerHTML = `
     <!-- Hero -->
@@ -514,13 +602,16 @@ function renderResults() {
         <div class="results-sidebar">
           <h4 style="margin-bottom:16px;color:var(--navy)">Filter by Event</h4>
           <div style="display:flex;flex-direction:column;gap:8px" id="results-filter">
-            <button class="filter-tab active" data-event="all" style="text-align:left;width:100%">All Events</button>
-            ${allEvents.map(ev => `<button class="filter-tab" data-event="${ev}" style="text-align:left;width:100%">${ev}</button>`).join('')}
+            <button class="filter-tab active" data-event="all" style="text-align:left;width:100%">All Events (${winners.length})</button>
+            ${allEvents.map(ev => {
+              const cnt = winners.filter(w => w.event === ev).length;
+              return `<button class="filter-tab" data-event="${escapeHtml(ev)}" style="text-align:left;width:100%">${escapeHtml(ev)} (${cnt})</button>`;
+            }).join('')}
           </div>
 
           <div style="margin-top:32px;padding:20px;background:var(--primary-pale);border-radius:var(--radius-lg)">
             <h4 style="color:var(--primary);margin-bottom:8px">🌱 Green Impact</h4>
-            <p style="font-size:0.85rem">These competitions have funded the planting of <strong style="color:var(--primary)">8,400 trees</strong> across India through SankalpTaru.</p>
+            <p style="font-size:0.85rem">These competitions have funded the planting of <strong style="color:var(--primary)">${totalTrees.toLocaleString('en-IN')} trees</strong> across India through SankalpTaru.</p>
           </div>
         </div>
 
@@ -539,7 +630,7 @@ function renderResults() {
         document.querySelectorAll('#results-filter .filter-tab').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
         const event = this.dataset.event;
-        const filtered = event === 'all' ? DATA.winners : DATA.winners.filter(w => w.event === event);
+        const filtered = event === 'all' ? winners : winners.filter(w => w.event === event);
         document.getElementById('results-main').innerHTML = renderResultCards(filtered);
       });
     });
@@ -554,14 +645,14 @@ function renderResultCards(winners) {
   const rankIcon = { 1: '🥇', 2: '🥈', 3: '🥉' };
   return winners.map(w => `
     <div class="result-card">
-      <div class="result-rank ${rankCls[w.rank]}">${rankIcon[w.rank]}</div>
-      <div class="result-art-placeholder" style="background:${w.gradient}">
-        <span style="font-size:1.2rem">${w.emoji}</span>
-      </div>
+      <div class="result-rank ${rankCls[w.rank] || 'gold'}">${rankIcon[w.rank] || '🏆'}</div>
+      ${w.fileDataUrl
+        ? `<img class="result-art" src="${w.fileDataUrl}" alt="${escapeHtml(w.title)}" />`
+        : `<div class="result-art-placeholder" style="background:${w.gradient || 'var(--primary)'}"><span style="font-size:1.2rem">${w.emoji || '🎨'}</span></div>`}
       <div class="result-info">
-        <div class="result-name">${w.title}</div>
-        <div class="result-artist">by ${w.artist}</div>
-        <div class="result-cat">${w.category} &middot; ${w.ageGroup} &middot; ${w.month}</div>
+        <div class="result-name">${escapeHtml(w.title)}</div>
+        <div class="result-artist">by ${escapeHtml(w.artist)}</div>
+        <div class="result-cat">${escapeHtml(w.category)} &middot; ${escapeHtml(w.ageGroup)} &middot; ${escapeHtml(w.month)}</div>
       </div>
       <span class="pill ${w.rank === 1 ? 'pill-gold' : w.rank === 2 ? 'pill-gray' : 'pill-primary'}" style="align-self:center">${w.rank === 1 ? '1st' : w.rank === 2 ? '2nd' : '3rd'}</span>
     </div>
@@ -574,13 +665,37 @@ function renderResultCards(winners) {
 // ═══════════════════════════════════════════════
 let galleryFilter = { category: 'all', theme: 'all', age: 'all' };
 
+// Build a merged gallery: real approved submissions + static demo items
+function buildGalleryItems() {
+  const realItems = getAllSubmissionsAcrossUsers()
+    .filter(s => s.resultStatus === 'Winner' || s.resultStatus === 'Participated')
+    .map(s => ({
+      id: 'real_' + s.id,
+      title: s.artTitle || 'Untitled',
+      artist: s.userName || (s.userEmail || '').split('@')[0],
+      category: s.medium || 'Mixed Media',
+      ageGroup: s.category || 'All Ages',
+      month: s.date || '',
+      year: '',
+      theme: s.event || 'Student Art',
+      gradient: defaultGradient((s.artTitle || '') + (s.userEmail || '')),
+      emoji: s.resultStatus === 'Winner' ? '🏆' : '🎨',
+      fileDataUrl: s.fileDataUrl,
+      isReal: true,
+      resultStatus: s.resultStatus,
+    }));
+  const demoItems = DATA.gallery.map(g => ({ ...g, isReal: false }));
+  return [...realItems, ...demoItems];
+}
+
 function renderGallery() {
   // Reset filter state so dropdowns and grid match
   galleryFilter = { category: 'all', theme: 'all', age: 'all' };
   const el = document.createElement('div');
-  const categories = [...new Set(DATA.gallery.map(g => g.category))];
-  const themes = [...new Set(DATA.gallery.map(g => g.theme))];
-  const ages = [...new Set(DATA.gallery.map(g => g.ageGroup))];
+  const items = buildGalleryItems();
+  const categories = [...new Set(items.map(g => g.category).filter(Boolean))];
+  const themes = [...new Set(items.map(g => g.theme).filter(Boolean))];
+  const ages = [...new Set(items.map(g => g.ageGroup).filter(Boolean))];
 
   el.innerHTML = `
     <section class="section container" style="min-height:80vh">
@@ -591,15 +706,15 @@ function renderGallery() {
       <div class="gallery-filters" id="gallery-filters">
         <select class="filter-select" id="gf-category">
           <option value="all">All Categories</option>
-          ${categories.map(c => `<option value="${c}">${c}</option>`).join('')}
+          ${categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('')}
         </select>
         <select class="filter-select" id="gf-theme">
           <option value="all">All Themes</option>
-          ${themes.map(t => `<option value="${t}">${t}</option>`).join('')}
+          ${themes.map(t => `<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('')}
         </select>
         <select class="filter-select" id="gf-age">
           <option value="all">All Age Groups</option>
-          ${ages.map(a => `<option value="${a}">${a}</option>`).join('')}
+          ${ages.map(a => `<option value="${escapeHtml(a)}">${escapeHtml(a)}</option>`).join('')}
         </select>
         <span id="gallery-count" style="color:var(--text-muted);font-size:0.85rem;margin-left:auto"></span>
       </div>
@@ -617,7 +732,8 @@ function initGallery() {
     const countEl = document.getElementById('gallery-count');
     if (!grid) return;
 
-    const filtered = DATA.gallery.filter(g => {
+    const allItems = buildGalleryItems();
+    const filtered = allItems.filter(g => {
       if (galleryFilter.category !== 'all' && g.category !== galleryFilter.category) return false;
       if (galleryFilter.theme !== 'all' && g.theme !== galleryFilter.theme) return false;
       if (galleryFilter.age !== 'all' && g.ageGroup !== galleryFilter.age) return false;
@@ -631,18 +747,24 @@ function initGallery() {
       return;
     }
 
-    grid.innerHTML = filtered.map(g => `
-      <div class="gallery-item">
-        <div class="gallery-img-placeholder" style="background:${g.gradient}">
-          <span style="font-size:2.5rem">${g.emoji}</span>
-        </div>
+    grid.innerHTML = filtered.map(g => {
+      const img = g.fileDataUrl
+        ? `<img class="gallery-img" src="${g.fileDataUrl}" alt="${escapeHtml(g.title)}" />`
+        : `<div class="gallery-img-placeholder" style="background:${g.gradient}"><span style="font-size:2.5rem">${g.emoji}</span></div>`;
+      const winnerBadge = g.resultStatus === 'Winner'
+        ? `<span class="pill rank-gold" style="position:absolute;top:10px;left:10px;font-size:0.65rem">Winner</span>`
+        : '';
+      return `
+      <div class="gallery-item" style="position:relative">
+        ${winnerBadge}
+        ${img}
         <div class="gallery-info">
-          <div class="gallery-artist">${g.title}</div>
-          <div class="gallery-meta">by ${g.artist} &middot; ${g.category}</div>
-          <div class="gallery-meta">${g.ageGroup} &middot; ${g.month} ${g.year} &middot; ${g.theme}</div>
+          <div class="gallery-artist">${escapeHtml(g.title)}</div>
+          <div class="gallery-meta">by ${escapeHtml(g.artist)} &middot; ${escapeHtml(g.category)}</div>
+          <div class="gallery-meta">${escapeHtml(g.ageGroup)} &middot; ${escapeHtml(g.month)} ${g.year || ''} &middot; ${escapeHtml(g.theme)}</div>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
   }
 
   // Bind filter selects
@@ -817,17 +939,20 @@ function renderAbout() {
       <div class="container">
         <h2 class="section-title">Our Impact So Far</h2>
         <p class="section-subtitle">Numbers that reflect the power of creativity combined with purpose.</p>
+        ${(() => {
+          const stats = computePlatformStats();
+          return `
         <div class="achievement-grid">
           <div class="achievement-card">
-            <div class="achievement-num">24,500+</div>
+            <div class="achievement-num">${stats.artworks}</div>
             <div class="achievement-label">Artworks Submitted</div>
           </div>
           <div class="achievement-card">
-            <div class="achievement-num">1,200+</div>
+            <div class="achievement-num">${stats.schools}</div>
             <div class="achievement-label">Participating Schools</div>
           </div>
           <div class="achievement-card">
-            <div class="achievement-num">8,400</div>
+            <div class="achievement-num">${stats.trees}</div>
             <div class="achievement-label">Trees Planted</div>
           </div>
           <div class="achievement-card">
@@ -835,14 +960,15 @@ function renderAbout() {
             <div class="achievement-label">States Represented</div>
           </div>
           <div class="achievement-card">
-            <div class="achievement-num">168T</div>
+            <div class="achievement-num">${stats.co2}</div>
             <div class="achievement-label">Carbon Sequestered (Est.)</div>
           </div>
           <div class="achievement-card">
             <div class="achievement-num">\u20B942L+</div>
             <div class="achievement-label">CSR Funds Deployed</div>
           </div>
-        </div>
+        </div>`;
+        })()}
       </div>
     </section>
 
@@ -1001,15 +1127,24 @@ function renderContact() {
 function submitContactForm() {
   const name = document.getElementById('contact-name')?.value.trim();
   const email = document.getElementById('contact-email')?.value.trim();
+  const subject = document.getElementById('contact-subject')?.value || 'General Inquiry';
   const message = document.getElementById('contact-message')?.value.trim();
   if (!name || !email || !message) {
     showToast('Please fill in all required fields', 'error');
     return;
   }
+  // Persist to localStorage for admin to review
+  try {
+    const inquiries = JSON.parse(localStorage.getItem('aba_contact_messages') || '[]');
+    inquiries.unshift({ id: Date.now(), name, email, subject, message, date: new Date().toLocaleDateString('en-IN') });
+    localStorage.setItem('aba_contact_messages', JSON.stringify(inquiries));
+  } catch (e) { /* quota */ }
   showToast('Message sent! We\'ll get back to you within 24 hours.', 'success');
   document.getElementById('contact-name').value = '';
   document.getElementById('contact-email').value = '';
   document.getElementById('contact-message').value = '';
+  const subjectEl = document.getElementById('contact-subject');
+  if (subjectEl) subjectEl.selectedIndex = 0;
 }
 
 
@@ -1107,7 +1242,7 @@ function renderDashOverview(user, submissions) {
     ${submissions.length ? `
       <h3 class="dash-section-title">Recent Submissions</h3>
       <div class="table-responsive"><table class="submission-table">
-        <thead><tr><th>Artwork</th><th>Event</th><th>Medium</th><th>Date</th><th>Status</th></tr></thead>
+        <thead><tr><th style="width:60px">Art</th><th>Artwork</th><th>Event</th><th>Medium</th><th>Date</th><th>Status</th></tr></thead>
         <tbody>
           ${submissions.slice(0, 5).map(s => {
             const pill = s.resultStatus === 'Winner'
@@ -1115,8 +1250,12 @@ function renderDashOverview(user, submissions) {
               : s.resultStatus === 'Participated'
               ? '<span class="pill pill-primary">Participated</span>'
               : '<span class="pill pill-gold">Under Review</span>';
+            const thumb = s.fileDataUrl
+              ? `<img src="${s.fileDataUrl}" alt="" style="width:48px;height:36px;object-fit:cover;border-radius:6px" />`
+              : `<div style="width:48px;height:36px;border-radius:6px;background:var(--primary-pale);display:flex;align-items:center;justify-content:center;font-size:1rem">🖼️</div>`;
             return `
             <tr>
+              <td>${thumb}</td>
               <td style="font-weight:600;color:var(--navy)">${escapeHtml(s.artTitle)}</td>
               <td>${escapeHtml(s.event || '-')}</td>
               <td>${escapeHtml(s.medium || '-')}</td>
@@ -1178,7 +1317,7 @@ function renderDashSubmissions(submissions) {
   return `
     <h3 class="dash-section-title">My Submissions (${submissions.length})</h3>
     <div class="table-responsive"><table class="submission-table">
-      <thead><tr><th>Artwork</th><th>Event</th><th>Category</th><th>Medium</th><th>Date</th><th>Status</th><th>Result</th></tr></thead>
+      <thead><tr><th style="width:60px">Art</th><th>Artwork</th><th>Event</th><th>Category</th><th>Medium</th><th>Date</th><th>Status</th><th>Result</th></tr></thead>
       <tbody>
         ${submissions.map(s => {
           const statusPill = s.resultStatus
@@ -1189,8 +1328,12 @@ function renderDashSubmissions(submissions) {
           const resultCol = s.resultStatus
             ? `<span style="color:var(--success);font-weight:600;font-size:0.82rem">Declared</span>`
             : `<span style="color:var(--text-muted);font-size:0.82rem">Pending</span>`;
+          const thumb = s.fileDataUrl
+            ? `<img src="${s.fileDataUrl}" alt="" style="width:48px;height:36px;object-fit:cover;border-radius:6px" />`
+            : `<div style="width:48px;height:36px;border-radius:6px;background:var(--primary-pale);display:flex;align-items:center;justify-content:center;font-size:1rem">🖼️</div>`;
           return `
           <tr>
+            <td>${thumb}</td>
             <td style="font-weight:600;color:var(--navy)">${escapeHtml(s.artTitle)}</td>
             <td>${escapeHtml(s.event || '-')}</td>
             <td>${escapeHtml(s.category || '-')}</td>

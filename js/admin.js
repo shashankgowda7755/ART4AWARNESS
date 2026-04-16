@@ -166,6 +166,7 @@ function switchAdminTab(tab) {
     results: renderAdminResults,
     users: renderAdminUsers,
     events: renderAdminEvents,
+    inquiries: renderAdminInquiries,
   };
 
   main.innerHTML = (renderers[tab] || renderAdminDashboard)();
@@ -304,6 +305,7 @@ function renderAdminSubmissions() {
         <h1>Submissions</h1>
         <p style="color:var(--text-muted);font-size:0.88rem">${all.length} total submissions across all users</p>
       </div>
+      <button class="btn btn-outline btn-sm" onclick="exportSubmissionsCSV()">Export CSV</button>
     </div>
 
     <div class="admin-filters">
@@ -524,9 +526,60 @@ function bulkDeclare(status) {
 // ═══════════════════════════════════════════════
 //  USERS
 // ═══════════════════════════════════════════════
+let viewingUserEmail = null;
+
 function renderAdminUsers() {
   const users = getAllUsers();
   const allSubs = getAllSubmissions();
+
+  // If viewing a specific user's submissions
+  if (viewingUserEmail) {
+    const user = users.find(u => u.email === viewingUserEmail) || { name: viewingUserEmail, email: viewingUserEmail };
+    const uSubs = allSubs.filter(s => s.userEmail === viewingUserEmail);
+    return `
+      <div class="admin-header">
+        <div>
+          <h1>${escapeHtml(user.name || 'User')}</h1>
+          <p style="color:var(--text-muted);font-size:0.88rem">${escapeHtml(user.email)} &middot; Joined ${user.joined || '-'} &middot; ${uSubs.length} submissions</p>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="viewingUserEmail=null;document.getElementById('admin-main').innerHTML=renderAdminUsers()">&larr; Back to Users</button>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-body flush" style="overflow-x:auto">
+          ${uSubs.length ? `
+          <table class="admin-table">
+            <thead><tr><th style="width:60px">Art</th><th>Artwork</th><th>Event</th><th>Category</th><th>Medium</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>
+              ${uSubs.map(s => {
+                const thumb = s.fileDataUrl
+                  ? `<img src="${s.fileDataUrl}" alt="" style="width:48px;height:36px;object-fit:cover;border-radius:6px" />`
+                  : `<div style="width:48px;height:36px;border-radius:6px;background:#e8f4f7;display:flex;align-items:center;justify-content:center;font-size:0.9rem">🖼️</div>`;
+                return `
+                <tr>
+                  <td>${thumb}</td>
+                  <td style="font-weight:600;color:var(--navy)">${escapeHtml(s.artTitle)}</td>
+                  <td>${escapeHtml(s.event || '-')}</td>
+                  <td style="font-size:0.82rem">${escapeHtml(s.category || '-')}</td>
+                  <td style="font-size:0.82rem">${escapeHtml(s.medium || '-')}</td>
+                  <td style="white-space:nowrap;font-size:0.82rem">${s.date || '-'}</td>
+                  <td>${statusPill(s)}</td>
+                  <td>
+                    <div class="actions">
+                      ${!s.resultStatus ? `
+                        <button class="btn btn-success btn-xs" onclick="declareResult('${escapeHtml(s.userEmail)}',${s.id},'Winner');viewingUserEmail='${escapeHtml(s.userEmail)}'">Winner</button>
+                        <button class="btn btn-primary btn-xs" onclick="declareResult('${escapeHtml(s.userEmail)}',${s.id},'Participated');viewingUserEmail='${escapeHtml(s.userEmail)}'">Participated</button>
+                      ` : `
+                        <button class="btn btn-outline btn-xs" onclick="undeclareResult('${escapeHtml(s.userEmail)}',${s.id});viewingUserEmail='${escapeHtml(s.userEmail)}'">Reset</button>
+                      `}
+                    </div>
+                  </td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>` : '<p style="padding:40px;text-align:center;color:var(--text-muted)">No submissions from this user</p>'}
+        </div>
+      </div>`;
+  }
 
   return `
     <div class="admin-header">
@@ -534,13 +587,14 @@ function renderAdminUsers() {
         <h1>Users</h1>
         <p style="color:var(--text-muted);font-size:0.88rem">${users.length} registered users</p>
       </div>
+      <button class="btn btn-outline btn-sm" onclick="exportUsersCSV()">Export CSV</button>
     </div>
 
     <div class="admin-card">
       <div class="admin-card-body flush" style="overflow-x:auto">
         ${users.length ? `
         <table class="admin-table">
-          <thead><tr><th>Name</th><th>Email</th><th>Mobile</th><th>Joined</th><th>Submissions</th><th>Results</th></tr></thead>
+          <thead><tr><th>Name</th><th>Email</th><th>Mobile</th><th>Joined</th><th>Submissions</th><th>Results</th><th>Actions</th></tr></thead>
           <tbody>
             ${users.map(u => {
               const uSubs = allSubs.filter(s => s.userEmail === u.email);
@@ -557,6 +611,7 @@ function renderAdminUsers() {
                   ${uDeclared.length ? `<span class="pill pill-primary">${uDeclared.length} declared</span>` : '<span style="color:var(--text-muted);font-size:0.82rem">None</span>'}
                   ${uWins.length ? ` <span class="pill rank-gold">${uWins.length} win${uWins.length>1?'s':''}</span>` : ''}
                 </td>
+                <td><button class="btn btn-outline btn-xs" onclick="viewingUserEmail='${escapeHtml(u.email)}';document.getElementById('admin-main').innerHTML=renderAdminUsers()">View</button></td>
               </tr>`;
             }).join('')}
           </tbody>
@@ -734,9 +789,10 @@ function saveEvent() {
   }
   saveCustomEvents(custom);
 
+  const wasEditing = !!editingEvent;
   showEventForm = false;
   editingEvent = null;
-  showToast(editingEvent ? 'Event updated' : 'Event added', 'success');
+  showToast(wasEditing ? 'Event updated' : 'Event added', 'success');
   document.getElementById('admin-main').innerHTML = renderAdminEvents();
 }
 
@@ -752,4 +808,128 @@ function confirmDeleteEvent(customIdx) {
   saveCustomEvents(custom);
   showToast('Event deleted', 'info');
   document.getElementById('admin-main').innerHTML = renderAdminEvents();
+}
+
+// ═══════════════════════════════════════════════
+//  CSV EXPORT
+// ═══════════════════════════════════════════════
+function downloadCSV(filename, rows) {
+  const csvContent = rows.map(row =>
+    row.map(cell => {
+      const str = String(cell == null ? '' : cell);
+      return str.includes(',') || str.includes('"') || str.includes('\n')
+        ? '"' + str.replace(/"/g, '""') + '"' : str;
+    }).join(',')
+  ).join('\n');
+  const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
+  showToast('CSV downloaded: ' + filename, 'success');
+}
+
+function exportSubmissionsCSV() {
+  const subs = getAllSubmissions();
+  const rows = [['Artwork Title', 'User Email', 'User Name', 'Event', 'Category', 'Medium', 'School', 'Date', 'Status', 'Result']];
+  subs.forEach(s => {
+    rows.push([s.artTitle, s.userEmail, s.userName || '', s.event, s.category, s.medium, s.school || '', s.date, s.status, s.resultStatus || 'Pending']);
+  });
+  downloadCSV('ABA_Submissions_' + new Date().toISOString().slice(0, 10) + '.csv', rows);
+}
+
+// ═══════════════════════════════════════════════
+//  INQUIRIES & SUBSCRIBERS
+// ═══════════════════════════════════════════════
+function renderAdminInquiries() {
+  const inquiries = JSON.parse(localStorage.getItem('aba_contact_messages') || '[]');
+  const subscribers = JSON.parse(localStorage.getItem('aba_newsletter_subscribers') || '[]');
+
+  return `
+    <div class="admin-header">
+      <div>
+        <h1>Inquiries &amp; Subscribers</h1>
+        <p style="color:var(--text-muted);font-size:0.88rem">${inquiries.length} contact messages &middot; ${subscribers.length} newsletter subscribers</p>
+      </div>
+    </div>
+
+    <!-- Contact Messages -->
+    <div class="admin-card" style="margin-bottom:24px">
+      <div class="admin-card-header">
+        <h3>Contact Messages (${inquiries.length})</h3>
+        ${inquiries.length ? `<button class="btn btn-outline btn-xs" onclick="exportInquiriesCSV()">Export CSV</button>` : ''}
+      </div>
+      <div class="admin-card-body flush" style="overflow-x:auto">
+        ${inquiries.length ? `
+        <table class="admin-table">
+          <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Date</th><th>Actions</th></tr></thead>
+          <tbody>
+            ${inquiries.map((m, i) => `
+              <tr>
+                <td style="font-weight:600;color:var(--navy)">${escapeHtml(m.name)}</td>
+                <td style="font-size:0.82rem">${escapeHtml(m.email)}</td>
+                <td><span class="pill pill-primary" style="font-size:0.65rem">${escapeHtml(m.subject)}</span></td>
+                <td style="max-width:300px;font-size:0.82rem;white-space:normal">${escapeHtml(m.message).substring(0, 120)}${m.message.length > 120 ? '...' : ''}</td>
+                <td style="white-space:nowrap;font-size:0.82rem">${m.date || '-'}</td>
+                <td><button class="btn btn-danger btn-xs" onclick="deleteInquiry(${i})">Del</button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>` : '<p style="padding:40px;text-align:center;color:var(--text-muted)">No contact messages yet</p>'}
+      </div>
+    </div>
+
+    <!-- Newsletter Subscribers -->
+    <div class="admin-card">
+      <div class="admin-card-header">
+        <h3>Newsletter Subscribers (${subscribers.length})</h3>
+        ${subscribers.length ? `<button class="btn btn-outline btn-xs" onclick="exportSubscribersCSV()">Export CSV</button>` : ''}
+      </div>
+      <div class="admin-card-body">
+        ${subscribers.length ? `
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            ${subscribers.map(email => `<span class="pill pill-primary">${escapeHtml(email)}</span>`).join('')}
+          </div>
+        ` : '<p style="color:var(--text-muted);text-align:center">No subscribers yet</p>'}
+      </div>
+    </div>
+  `;
+}
+
+function deleteInquiry(index) {
+  if (!confirm('Delete this message?')) return;
+  const inquiries = JSON.parse(localStorage.getItem('aba_contact_messages') || '[]');
+  inquiries.splice(index, 1);
+  localStorage.setItem('aba_contact_messages', JSON.stringify(inquiries));
+  document.getElementById('admin-main').innerHTML = renderAdminInquiries();
+  showToast('Message deleted', 'info');
+}
+
+function exportInquiriesCSV() {
+  const inquiries = JSON.parse(localStorage.getItem('aba_contact_messages') || '[]');
+  const rows = [['Name', 'Email', 'Subject', 'Message', 'Date']];
+  inquiries.forEach(m => rows.push([m.name, m.email, m.subject, m.message, m.date]));
+  downloadCSV('ABA_Inquiries_' + new Date().toISOString().slice(0, 10) + '.csv', rows);
+}
+
+function exportSubscribersCSV() {
+  const subs = JSON.parse(localStorage.getItem('aba_newsletter_subscribers') || '[]');
+  const rows = [['Email']];
+  subs.forEach(e => rows.push([e]));
+  downloadCSV('ABA_Subscribers_' + new Date().toISOString().slice(0, 10) + '.csv', rows);
+}
+
+function exportUsersCSV() {
+  const users = getAllUsers();
+  const allSubs = getAllSubmissions();
+  const rows = [['Name', 'Email', 'Mobile', 'Joined', 'Submissions', 'Winners', 'Participated']];
+  users.forEach(u => {
+    const uSubs = allSubs.filter(s => s.userEmail === u.email);
+    rows.push([u.name, u.email, u.mobile || '', u.joined || '', uSubs.length,
+      uSubs.filter(s => s.resultStatus === 'Winner').length,
+      uSubs.filter(s => s.resultStatus === 'Participated').length
+    ]);
+  });
+  downloadCSV('ABA_Users_' + new Date().toISOString().slice(0, 10) + '.csv', rows);
 }
