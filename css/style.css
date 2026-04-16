@@ -96,7 +96,7 @@ p { color: var(--text-secondary); line-height: 1.7; }
 .btn-dark { background: var(--navy); color: white; }
 .btn-dark:hover { background: var(--navy-mid); transform: translateY(-1px); }
 .btn-gold { background: var(--gold); color: white; }
-.btn-gold:hover { background: #a8881f; }
+.btn-gold:hover { background: var(--primary-dark); }
 .btn-sm { padding: 8px 16px; font-size: 0.82rem; }
 .btn-lg { padding: 16px 36px; font-size: 1rem; border-radius: var(--radius-lg); }
 
@@ -106,7 +106,7 @@ p { color: var(--text-secondary); line-height: 1.7; }
   box-shadow: var(--shadow-sm); transition: var(--transition);
   overflow: hidden;
 }
-.card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); }
 .card-body { padding: 24px; }
 
 /* ─── Pills / Badges ─── */
@@ -149,7 +149,7 @@ nav { display: flex; align-items: center; gap: 4px; flex: 1; }
 .nav-link:hover { color: var(--primary); background: var(--primary-pale); }
 .nav-link.active { color: var(--primary); font-weight: 700; border-bottom: 2px solid var(--primary); border-radius: 0; }
 .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
-.btn-login { color: var(--text-secondary); font-weight: 600; font-size: 0.88rem; padding: 8px 14px; border-radius: var(--radius-sm); transition: var(--transition); font-family: var(--font-heading); }
+.btn-login { color: var(--text-secondary); font-weight: 600; font-size: 0.88rem; padding: 8px 16px; border-radius: var(--radius-md); transition: var(--transition); font-family: var(--font-heading); }
 .btn-login:hover { color: var(--primary); background: var(--primary-pale); }
 .btn-register { background: var(--primary); color: white; padding: 10px 20px; border-radius: var(--radius-md); font-family: var(--font-heading); font-weight: 700; font-size: 0.88rem; transition: var(--transition); }
 .btn-register:hover { background: var(--primary-dark); }
@@ -389,7 +389,7 @@ nav { display: flex; align-items: center; gap: 4px; flex: 1; }
 }
 .cal-day:hover { background: var(--primary-pale); }
 .cal-day.other-month { opacity: 0.35; }
-.cal-day.today { background: #e8f4f7; }
+.cal-day.today { background: var(--primary-pale); }
 .cal-day.today .cal-day-num { background: var(--primary); color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 700; }
 .cal-day.selected { background: var(--primary-pale); outline: 2px solid var(--primary); }
 .cal-day-num { font-family: var(--font-heading); font-weight: 600; font-size: 0.95rem; color: var(--navy); margin-bottom: 4px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; }
@@ -661,16 +661,14 @@ footer {
   padding: 14px 20px; border-radius: var(--radius-md);
   box-shadow: var(--shadow-xl); font-size: 0.88rem; font-weight: 500;
   display: flex; align-items: center; gap: 10px;
-  animation: slideInRight 0.3s ease; min-width: 280px;
+  min-width: 280px;
 }
 .toast.success { border-left: 4px solid var(--success); }
 .toast.error { border-left: 4px solid var(--error); }
 .toast.info { border-left: 4px solid var(--primary); }
 @keyframes slideInRight { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-/* ─── Page loading animation ─── */
-#page-content { animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+/* ─── Page loading animation (overridden by polish section) ─── */
 
 /* ─── Responsive ─── */
 @media (max-width: 1024px) {
@@ -711,23 +709,170 @@ footer {
 .text-teal { color: var(--primary); }
 .text-gold { color: var(--gold); }
 .text-navy { color: var(--navy); }
+.text-white { color: white; }
+.text-muted { color: var(--text-muted); }
+.text-secondary { color: var(--text-secondary); }
+.text-primary-color { color: var(--primary); }
+.mt-4 { margin-top: 4px; }
 .mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
 .mt-16 { margin-top: 16px; }
 .mt-24 { margin-top: 24px; }
 .mt-32 { margin-top: 32px; }
 .mt-48 { margin-top: 48px; }
+.mb-4 { margin-bottom: 4px; }
 .mb-8 { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
 .mb-16 { margin-bottom: 16px; }
 .mb-24 { margin-bottom: 24px; }
 .mb-32 { margin-bottom: 32px; }
 .flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
 .items-center { align-items: center; }
+.items-start { align-items: flex-start; }
 .justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
 .gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
 .gap-16 { gap: 16px; }
+.gap-24 { gap: 24px; }
 .w-full { width: 100%; }
 .hidden { display: none !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+/* ─── Type Scale Utilities ─── */
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.85rem; }
+.text-base { font-size: 1rem; }
+.text-lg { font-size: 1.15rem; }
+.text-xl { font-size: 1.3rem; }
+.text-2xl { font-size: 1.8rem; }
+.text-3xl { font-size: 2.2rem; }
+.fw-500 { font-weight: 500; }
+.fw-600 { font-weight: 600; }
+.fw-700 { font-weight: 700; }
+.fw-800 { font-weight: 800; }
+.fw-900 { font-weight: 900; }
+
+/* ─── Section Background Utilities ─── */
+.bg-white { background: var(--bg-white); }
+.bg-light { background: var(--bg); }
+.bg-navy { background: var(--navy); }
+.bg-primary { background: var(--primary); }
+
+/* ─── Empty State ─── */
+.empty-state { text-align: center; padding: 60px 24px; }
+@media (max-width: 768px) { .empty-state { padding: 40px 16px; } }
+.empty-state-icon { font-size: 3rem; margin-bottom: 16px; }
+
+/* ─── Thumbnail ─── */
+.thumb { width: 48px; height: 36px; object-fit: cover; border-radius: 6px; }
+.thumb-placeholder { width: 48px; height: 36px; border-radius: 6px; background: var(--primary-pale); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+
+/* ─── Card Body Centered ─── */
+.card-centered { text-align: center; padding: 32px; }
+@media (max-width: 768px) { .card-centered { padding: 24px 16px; } }
+
+/* ─── Financial Row ─── */
+.info-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-light); }
+.info-row:last-child { border-bottom: none; }
+
+/* ─── Event Flex Layout ─── */
+.event-flex { display: flex; gap: 16px; align-items: flex-start; }
+@media (max-width: 480px) { .event-flex { gap: 12px; } }
+
+/* ─── Flex Center Wrap ─── */
+.flex-center-wrap { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* ─── Active States (all interactive elements) ─── */
+.btn:active, .btn-primary:active, .btn-outline:active, .btn-dark:active, .btn-gold:active, .form-submit:active, .btn-generate:active {
+  transform: scale(0.97); transition-duration: 0.08s;
+}
+.filter-tab:active, .social-btn:active, .calendar-nav-btn:active {
+  transform: scale(0.95); transition-duration: 0.08s;
+}
+.card:active, .event-card:active, .winner-card:active, .gallery-item:active, .category-card:active, .impact-stat-card:active {
+  transform: translateY(-1px); transition-duration: 0.08s;
+}
+
+/* ─── Consistent Card Hover (standardize to -4px / shadow-md) ─── */
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+.achievement-card:hover, .contact-info-card:hover, .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+/* ─── Scroll Reveal Animation ─── */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal { opacity: 0; }
+.reveal.visible { animation: revealUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.reveal.visible:nth-child(2) { animation-delay: 0.08s; }
+.reveal.visible:nth-child(3) { animation-delay: 0.16s; }
+.reveal.visible:nth-child(4) { animation-delay: 0.24s; }
+.reveal.visible:nth-child(5) { animation-delay: 0.32s; }
+.reveal.visible:nth-child(6) { animation-delay: 0.40s; }
+
+/* ─── Smooth hover glow for primary buttons ─── */
+.btn-primary { position: relative; overflow: hidden; }
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.btn-primary:hover::after { opacity: 1; }
+
+/* ─── Stagger animation for grid children ─── */
+.grid-3 > *, .grid-4 > * { opacity: 0; animation: revealUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.grid-3 > *:nth-child(1), .grid-4 > *:nth-child(1) { animation-delay: 0s; }
+.grid-3 > *:nth-child(2), .grid-4 > *:nth-child(2) { animation-delay: 0.06s; }
+.grid-3 > *:nth-child(3), .grid-4 > *:nth-child(3) { animation-delay: 0.12s; }
+.grid-3 > *:nth-child(4) { animation-delay: 0.18s; }
+.grid-4 > *:nth-child(4) { animation-delay: 0.18s; }
+.grid-3 > *:nth-child(5) { animation-delay: 0.24s; }
+.grid-3 > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* ─── Smooth page transition (improved) ─── */
+@keyframes pageEnter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+#page-content { animation: pageEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* ─── Toast slide in + slide out ─── */
+@keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+.toast { animation: toastIn 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* ─── Carousel dot pulse on active ─── */
+.dot.active { animation: dotPulse 0.4s ease; }
+@keyframes dotPulse { 0% { transform: scale(0.8); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+/* ─── Stats counter entrance ─── */
+.impact-stat-card { opacity: 0; animation: revealUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.impact-stat-card:nth-child(1) { animation-delay: 0s; }
+.impact-stat-card:nth-child(2) { animation-delay: 0.1s; }
+.impact-stat-card:nth-child(3) { animation-delay: 0.2s; }
+.impact-stat-card:nth-child(4) { animation-delay: 0.3s; }
+
+/* ─── Smooth focus ring animation ─── */
+@keyframes focusRing { from { box-shadow: 0 0 0 0px rgba(27,107,125,0.4); } to { box-shadow: 0 0 0 4px rgba(27,107,125,0.15); } }
+
+/* ─── Winner card image hover zoom ─── */
+.winner-card .winner-img, .winner-card .winner-img-placeholder { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+.winner-card:hover .winner-img, .winner-card:hover .winner-img-placeholder { transform: scale(1.04); }
+
+/* ─── Gallery item image hover zoom ─── */
+.gallery-item .gallery-img, .gallery-item .gallery-img-placeholder { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+.gallery-item:hover .gallery-img, .gallery-item:hover .gallery-img-placeholder { transform: scale(1.05); }
+
+/* ─── FAQ smooth expand ─── */
+.faq-answer { transition: max-height 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease; opacity: 0; }
+.faq-item.open .faq-answer { opacity: 1; }
+.faq-icon { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+
+/* ─── Dream Generator text reveal ─── */
+.dream-output p { transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* ─── Header shadow on scroll (applied via JS) ─── */
+#site-header { transition: box-shadow 0.3s ease; }
+#site-header.scrolled { box-shadow: 0 2px 20px rgba(15,27,45,0.1); }
 
 /* ─── Mobile Menu ─── */
 .mobile-menu-btn {

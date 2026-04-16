@@ -887,3 +887,9 @@ document.addEventListener('keydown', e => {
   else if (t.id === 'forgot-code') { e.preventDefault(); verifyResetCode(); }
   else if (t.id === 'forgot-newpass' || t.id === 'forgot-confirm') { e.preventDefault(); resetPassword(); }
 });
+
+// ─── Header scroll shadow ───
+window.addEventListener('scroll', () => {
+  const header = document.getElementById('site-header');
+  if (header) header.classList.toggle('scrolled', window.scrollY > 10);
+}, { passive: true });

@@ -12,7 +12,7 @@ function render404() {
         <h1 style="font-size:4rem;color:var(--primary);margin-bottom:8px">404</h1>
         <h2 style="margin-bottom:16px">Page Not Found</h2>
         <p style="color:var(--text-secondary);max-width:400px;margin:0 auto 32px">The page you're looking for doesn't exist or has been moved. Let's get you back on track.</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <div class="flex-center-wrap">
           <button class="btn btn-primary" onclick="navigate('home')">Go Home</button>
           <button class="btn btn-outline" onclick="navigate('events')">View Events</button>
         </div>
@@ -156,7 +156,7 @@ function renderHome() {
       <div class="grid-3">
         ${upcomingEvents.map(e => `
           <div class="event-card">
-            <div style="display:flex;gap:16px;align-items:flex-start">
+            <div class="event-flex">
               <div>
                 <div class="event-date-num">${String(e.day).padStart(2, '0')}</div>
                 <div class="event-month">${e.monthName}</div>
@@ -284,7 +284,7 @@ function renderHome() {
       <div class="container">
         <h2 style="color:white;margin-bottom:12px">Ready to Create with a Cause?</h2>
         <p style="color:rgba(255,255,255,0.75);max-width:480px;margin:0 auto 28px">Join thousands of young artists creating awareness through art. Free to participate, open to all students aged 6\u201317.</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <div class="flex-center-wrap">
           <button class="btn btn-lg" style="background:var(--secondary);color:white" onclick="startRegistration()">Submit Your Artwork</button>
           <button class="btn btn-outline btn-lg" style="color:white;border-color:rgba(255,255,255,0.3)" onclick="navigate('about')">Learn More</button>
         </div>
@@ -498,7 +498,7 @@ function initCalendar() {
     const events = DATA.events.filter(e => calFilter === 'all' || e.type === calFilter);
     grid.innerHTML = events.map(e => `
       <div class="event-card">
-        <div style="display:flex;gap:16px;align-items:flex-start">
+        <div class="event-flex">
           <div>
             <div class="event-date-num">${String(e.day).padStart(2, '0')}</div>
             <div class="event-month">${e.monthName}</div>
@@ -994,22 +994,22 @@ function renderAbout() {
       <h2 class="section-title">Our Mission Pillars</h2>
       <div class="grid-3 mt-32">
         <div class="card">
-          <div class="card-body" style="text-align:center;padding:32px">
-            <div style="font-size:3rem;margin-bottom:16px">🎓</div>
+          <div class="card-body card-centered"
+            <div class="empty-state-icon">🎓</div>
             <h3>Education</h3>
             <p style="margin-top:12px;font-size:0.88rem">Supporting NEP 2020 art integration mandates by providing monthly themes as ready-made lesson plans for teachers across India.</p>
           </div>
         </div>
         <div class="card">
-          <div class="card-body" style="text-align:center;padding:32px">
-            <div style="font-size:3rem;margin-bottom:16px">🌱</div>
+          <div class="card-body card-centered"
+            <div class="empty-state-icon">🌱</div>
             <h3>Environment</h3>
             <p style="margin-top:12px;font-size:0.88rem">Monthly themes tied to environmental awareness days, building a generation that understands and advocates for the planet.</p>
           </div>
         </div>
         <div class="card">
-          <div class="card-body" style="text-align:center;padding:32px">
-            <div style="font-size:3rem;margin-bottom:16px">🤝</div>
+          <div class="card-body card-centered"
+            <div class="empty-state-icon">🤝</div>
             <h3>Inclusivity</h3>
             <p style="margin-top:12px;font-size:0.88rem">Free participation, teacher-mediated model, and support for Tier 2/3 cities ensure art recognition reaches every child.</p>
           </div>
@@ -1268,8 +1268,8 @@ function renderDashOverview(user, submissions) {
               ? '<span class="pill pill-primary">Participated</span>'
               : '<span class="pill pill-gold">Under Review</span>';
             const thumb = s.fileDataUrl
-              ? `<img src="${s.fileDataUrl}" alt="" style="width:48px;height:36px;object-fit:cover;border-radius:6px" />`
-              : `<div style="width:48px;height:36px;border-radius:6px;background:var(--primary-pale);display:flex;align-items:center;justify-content:center;font-size:1rem">🖼️</div>`;
+              ? `<img src="${s.fileDataUrl}" alt="" class="thumb" />`
+              : `<div class="thumb-placeholder">🖼️</div>`;
             return `
             <tr>
               <td>${thumb}</td>
@@ -1283,8 +1283,8 @@ function renderDashOverview(user, submissions) {
         </tbody>
       </table></div>
     ` : `
-      <div style="text-align:center;padding:60px 0">
-        <div style="font-size:3rem;margin-bottom:16px">🖼️</div>
+      <div class="empty-state">
+        <div class="empty-state-icon">🖼️</div>
         <h3 style="color:var(--navy);margin-bottom:8px">No submissions yet</h3>
         <p style="color:var(--text-muted);margin-bottom:24px">Start your creative journey by submitting your first artwork!</p>
         <button class="btn btn-primary" onclick="startRegistration()">Submit Your First Artwork</button>
@@ -1324,8 +1324,8 @@ function renderDashSubmissions(submissions) {
   if (!submissions.length) {
     return `
       <h3 class="dash-section-title">My Submissions</h3>
-      <div style="text-align:center;padding:60px 0">
-        <div style="font-size:3rem;margin-bottom:16px">🖼️</div>
+      <div class="empty-state">
+        <div class="empty-state-icon">🖼️</div>
         <h3 style="color:var(--navy);margin-bottom:8px">No submissions yet</h3>
         <p style="color:var(--text-muted);margin-bottom:24px">Your submitted artworks will appear here.</p>
         <button class="btn btn-primary" onclick="startRegistration()">Submit Artwork</button>
@@ -1346,8 +1346,8 @@ function renderDashSubmissions(submissions) {
             ? `<span style="color:var(--success);font-weight:600;font-size:0.82rem">Declared</span>`
             : `<span style="color:var(--text-muted);font-size:0.82rem">Pending</span>`;
           const thumb = s.fileDataUrl
-            ? `<img src="${s.fileDataUrl}" alt="" style="width:48px;height:36px;object-fit:cover;border-radius:6px" />`
-            : `<div style="width:48px;height:36px;border-radius:6px;background:var(--primary-pale);display:flex;align-items:center;justify-content:center;font-size:1rem">🖼️</div>`;
+            ? `<img src="${s.fileDataUrl}" alt="" class="thumb" />`
+            : `<div class="thumb-placeholder">🖼️</div>`;
           return `
           <tr>
             <td>${thumb}</td>
@@ -1368,8 +1368,8 @@ function renderDashResults(submissions) {
   if (!submissions.length) {
     return `
       <h3 class="dash-section-title">Results &amp; Certificates</h3>
-      <div style="text-align:center;padding:60px 0">
-        <div style="font-size:3rem;margin-bottom:16px">🏆</div>
+      <div class="empty-state">
+        <div class="empty-state-icon">🏆</div>
         <h3 style="color:var(--navy);margin-bottom:8px">No submissions yet</h3>
         <p style="color:var(--text-muted);margin-bottom:24px">Submit artwork to a competition first. Certificates will be available once results are declared.</p>
         <button class="btn btn-primary" onclick="startRegistration()">Submit Artwork</button>
