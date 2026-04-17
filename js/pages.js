@@ -1049,13 +1049,12 @@ function renderAbout() {
       </div>
     </section>
 
-    <!-- NEP 2020 Alignment -->
+    <!-- NEP 2020 Alignment (info only — no submission CTA) -->
     <section class="section" style="background:var(--navy)">
       <div class="container text-center">
         <span class="pill pill-gold" style="margin-bottom:16px">NEP 2020 ALIGNED</span>
         <h2 style="color:white;margin-bottom:16px">Supporting India's Education Vision</h2>
-        <p style="color:rgba(255,255,255,0.7);max-width:560px;margin:0 auto 32px">Our monthly themes serve as curriculum-aligned resources, helping teachers integrate art education seamlessly into school schedules as mandated by the National Education Policy 2020.</p>
-        <button class="btn btn-gold btn-lg" onclick="startRegistration()">Join the Movement &rarr;</button>
+        <p style="color:rgba(255,255,255,0.7);max-width:560px;margin:0 auto">Our monthly themes serve as curriculum-aligned resources, helping teachers integrate art education seamlessly into school schedules as mandated by the National Education Policy 2020.</p>
       </div>
     </section>
 
