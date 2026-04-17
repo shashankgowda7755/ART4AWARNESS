@@ -1079,13 +1079,13 @@ function renderAbout() {
       </div>
     </section>
 
-    <!-- CONTACT (merged from old Contact page) -->
+    <!-- CONTACT US (full content, merged into About page) -->
     <section class="section" style="background:var(--bg-white)" id="get-in-touch">
       <div class="container">
         <div style="text-align:center;max-width:560px;margin:0 auto 40px">
           <span class="pill pill-primary mb-16">GET IN TOUCH</span>
-          <h2 class="section-title" style="margin-bottom:8px">Talk to Us</h2>
-          <p class="section-subtitle">Questions, ideas, or want to be a part of this? Drop us a message — we read every one.</p>
+          <h2 class="section-title" style="margin-bottom:8px">Contact Us</h2>
+          <p class="section-subtitle">Have questions? Want to partner? We'd love to hear from you.</p>
         </div>
 
         <div class="contact-grid">
@@ -1100,11 +1100,19 @@ function renderAbout() {
               </div>
             </div>
             <div class="contact-info-card">
+              <div class="contact-icon">📞</div>
+              <div class="contact-details">
+                <h4>Call Us</h4>
+                <p>Contact us via email</p>
+                <p style="color:var(--text-muted);font-size:0.8rem">We respond within 24 hours</p>
+              </div>
+            </div>
+            <div class="contact-info-card">
               <div class="contact-icon">📍</div>
               <div class="contact-details">
-                <h4>Based In</h4>
+                <h4>Visit Us</h4>
                 <p>Bengaluru, Karnataka, India</p>
-                <p style="color:var(--text-muted);font-size:0.8rem">Reaching students nationwide</p>
+                <p style="color:var(--text-muted);font-size:0.8rem">By appointment only</p>
               </div>
             </div>
             <div class="contact-info-card">
@@ -1112,13 +1120,13 @@ function renderAbout() {
               <div class="contact-details">
                 <h4>Partnerships</h4>
                 <p>partnerships@art4awareness.in</p>
-                <p style="color:var(--text-muted);font-size:0.8rem">Schools, organizations, and individuals</p>
+                <p style="color:var(--text-muted);font-size:0.8rem">For schools, organizations &amp; NGOs</p>
               </div>
             </div>
 
             <div style="background:var(--primary-pale);border-radius:var(--radius-lg);padding:24px;margin-top:16px">
               <h4 style="color:var(--primary);margin-bottom:8px">🎓 For Schools &amp; Teachers</h4>
-              <p style="font-size:0.88rem">Want to register your school? Bring monthly art competitions to your students at zero cost.</p>
+              <p style="font-size:0.88rem">Want to register your school? Join our Teacher Ambassador program and bring art competitions to your students at zero cost.</p>
               <button class="btn btn-primary btn-sm mt-16" onclick="startRegistration()">Register Your School</button>
             </div>
           </div>
@@ -1128,16 +1136,16 @@ function renderAbout() {
             <h3 style="margin-bottom:24px">Send Us a Message</h3>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Your Name *</label>
+                <label class="form-label" for="contact-name">Your Name *</label>
                 <input id="contact-name" class="form-input" type="text" placeholder="Full name" />
               </div>
               <div class="form-group">
-                <label class="form-label">Email *</label>
+                <label class="form-label" for="contact-email">Email *</label>
                 <input id="contact-email" class="form-input" type="email" placeholder="you@example.com" />
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Subject</label>
+              <label class="form-label" for="contact-subject">Subject</label>
               <select id="contact-subject" class="form-select">
                 <option>General Inquiry</option>
                 <option>Partnership</option>
@@ -1148,7 +1156,7 @@ function renderAbout() {
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Your Message *</label>
+              <label class="form-label" for="contact-message">Your Message *</label>
               <textarea id="contact-message" class="form-textarea" placeholder="Tell us how we can help..." style="min-height:140px"></textarea>
             </div>
             <button class="form-submit" onclick="submitContactForm()">Send Message &rarr;</button>
