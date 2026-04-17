@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="600" height="600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1B6B7D"/>
+      <stop offset="100%" stop-color="#2A8FA5"/>
+    </linearGradient>
+    <pattern id="paper" x="0" y="0" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="rgba(255,255,255,0.02)"/>
+      <circle cx="1" cy="1" r="0.3" fill="rgba(255,255,255,0.04)"/>
+    </pattern>
+  </defs>
+  <rect width="600" height="600" fill="url(#g)"/>
+  <rect width="600" height="600" fill="url(#paper)"/>
+  <text x="300" y="280" text-anchor="middle" font-size="110" dominant-baseline="middle">🎨</text>
+  <text x="300" y="400" text-anchor="middle" font-family="'Outfit', 'Segoe UI', sans-serif" font-size="22" font-weight="700" fill="white" letter-spacing="2" opacity="0.85">ARTWORK COMING SOON</text>
+  <text x="300" y="435" text-anchor="middle" font-family="'Inter', 'Segoe UI', sans-serif" font-size="15" fill="white" opacity="0.55">Ages 14–15</text>
+</svg>

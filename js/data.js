@@ -110,9 +110,64 @@ const DATA = {
     }
   ],
 
-  // ─── Previous Winners (populated from real admin-declared results via localStorage) ───
-  // Static demo data removed — only real results are shown.
-  winners: [],
+  // ─── Previous Winners (real admin-declared results via localStorage are added dynamically) ───
+  // This array holds curated demo artworks for the Gallery + home page until real submissions arrive.
+  // Real PNGs fall back to branded SVG placeholders in the same folder.
+  winners: (function() {
+    const sampleArtists = {
+      '6-7':   ['Ananya', 'Rohan', 'Kavya', 'Ishaan', 'Diya', 'Aarav'],
+      '8-9':   ['Meera', 'Arjun', 'Tara', 'Vihaan', 'Riya', 'Dev'],
+      '10-11': ['Aisha', 'Karthik', 'Priya', 'Rahul', 'Nisha', 'Aryan'],
+      '12-13': ['Sneha', 'Vikram', 'Ananya', 'Rohit', 'Kavya', 'Harsh'],
+      '14-15': ['Neha', 'Aditya', 'Shreya', 'Kabir', 'Ishita', 'Veer'],
+      '16-17': ['Ria', 'Aarush', 'Tanvi', 'Aryan', 'Myra', 'Shaurya'],
+    };
+    const titles = {
+      '6-7':   ['My Happy Planet', 'Tiger Tree', 'Save the Bees', 'Ocean Friends', 'Mountain Home', 'Dolphin Joy'],
+      '8-9':   ['Polar Bear Dreams', 'Forest River', 'Starry Whale', 'Elephant Family', 'Wind on the Hill', 'Peacock Dawn'],
+      '10-11': ['Silent Wisps', 'Golden Hills', 'Reef Dreams', 'Wild Bloom', 'Night Canopy', 'Quiet Forest'],
+      '12-13': ['Monsoon Village', 'City to Forest', 'Himalayan Prayer', 'Fishing Dawn', 'Rhino Rising', 'Ocean Current'],
+      '14-15': ['Hands of Hope', 'Fragmented Sky', 'Melting Ground', 'Children of Earth', 'Blue Poppy', 'Cracked Bloom'],
+      '16-17': ['The Elder', 'Neon Bazaar', 'Release', 'Textbook Tide', 'Monsoon Gesture', 'Metropolis at Dawn'],
+    };
+    const categoryLabels = {
+      '6-7': 'Young Explorers', '8-9': 'Creative Sparks', '10-11': 'Rising Artists',
+      '12-13': 'The Rising Tide', '14-15': 'Vanguard Academy', '16-17': 'Open Canvas',
+    };
+    const mediums = {
+      '6-7':   ['Crayon', 'Tempera', 'Crayon', 'Watercolor', 'Crayon', 'Finger Paint'],
+      '8-9':   ['Color Pencil', 'Watercolor', 'Acrylic', 'Color Pencil', 'Mixed Media', 'Watercolor'],
+      '10-11': ['Watercolor', 'Charcoal', 'Acrylic', 'Color Pencil', 'Watercolor', 'Pen & Ink'],
+      '12-13': ['Oil Pastel', 'Acrylic', 'Mixed Media', 'Watercolor', 'Charcoal', 'Acrylic'],
+      '14-15': ['Oil Paint', 'Gouache', 'Watercolor', 'Mixed Media', 'Botanical', 'Oil Pastel'],
+      '16-17': ['Oil Paint', 'Digital', 'Charcoal', 'Mixed Media', 'Acrylic', 'Watercolor'],
+    };
+    const themes = ['Earth Palette', "Nature's Brush", 'Green Vision', 'Deep Blue', 'Wild India', 'Sky Canvas'];
+    const list = [];
+    let id = 1;
+    Object.keys(sampleArtists).forEach(ageKey => {
+      for (let i = 1; i <= 6; i++) {
+        // Browser will fall back from .png to .svg via <img onerror>; we reference .png first
+        const imagePath = 'assets/winners/ages-' + ageKey + '/art-' + i + '.png';
+        const svgFallback = 'assets/winners/ages-' + ageKey + '/art-' + i + '.svg';
+        list.push({
+          id: id++,
+          title: titles[ageKey][i - 1],
+          artist: sampleArtists[ageKey][i - 1],
+          rank: i === 1 ? 1 : (i === 2 ? 2 : (i === 3 ? 3 : 0)),
+          category: mediums[ageKey][i - 1],
+          ageGroup: 'Ages ' + ageKey.replace('-', '–'),
+          categoryLabel: categoryLabels[ageKey],
+          event: themes[(id - 2) % themes.length],
+          month: ['April 2026','May 2026','June 2026','July 2026','August 2026','September 2026'][(id - 2) % 6],
+          image: imagePath,
+          imageFallback: svgFallback,
+          theme: themes[(id - 2) % themes.length],
+        });
+      }
+    });
+    return list;
+  })(),
 
   // ─── Categories ───
   categories: [
@@ -148,9 +203,23 @@ const DATA = {
     }
   ],
 
-  // ─── Gallery Items (populated from real admin-approved submissions via localStorage) ───
-  // Static demo data removed — only real approved submissions are shown.
-  gallery: [],
+  // ─── Gallery Items ───
+  // Shared with the winners catalog — gallery shows all submissions, not just top ranks.
+  // Real approved submissions from admin are merged in via pages.js buildGalleryItems().
+  get gallery() {
+    return (this.winners || []).map(w => ({
+      id: w.id,
+      title: w.title,
+      artist: w.artist,
+      category: w.category,
+      ageGroup: w.ageGroup,
+      month: w.month,
+      year: 2026,
+      theme: w.theme || w.event,
+      image: w.image,
+      imageFallback: w.imageFallback,
+    }));
+  },
 
   // ─── FAQs ───
   faqs: [

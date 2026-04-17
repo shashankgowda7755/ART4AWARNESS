@@ -76,7 +76,9 @@ function renderHome() {
     fileDataUrl: s.fileDataUrl,
   }));
   const needDemo = Math.max(0, 4 - realWinnerCards.length);
-  const winners = [...realWinnerCards, ...DATA.winners.slice(0, needDemo)];
+  // Pick demo winners spanning multiple age groups for variety (ids 1, 7, 13, 19 = one per age range)
+  const demoFeature = [1, 7, 13, 19].map(id => DATA.winners.find(w => w.id === id)).filter(Boolean);
+  const winners = [...realWinnerCards, ...demoFeature.slice(0, needDemo)];
   const categories = DATA.categories;
   const prizes = DATA.prizes;
   const faqs = DATA.faqs;
@@ -199,8 +201,10 @@ function renderHome() {
           const rankCls = { 1: 'rank-gold', 2: 'rank-silver', 3: 'rank-bronze' };
           const rankLabel = { 1: '1st Place', 2: '2nd Place', 3: '3rd Place' };
           const rankIcon = { 1: '🥇', 2: '🥈', 3: '🥉' };
-          const imgBlock = w.fileDataUrl
-            ? `<img class="winner-img" src="${w.fileDataUrl}" alt="${escapeHtml(w.title)}" />`
+          let imgSrc = w.fileDataUrl || w.image;
+          const imgFallback = w.imageFallback || '';
+          const imgBlock = imgSrc
+            ? `<img class="winner-img" src="${imgSrc}" alt="${escapeHtml(w.title)}" loading="lazy" ${imgFallback ? `onerror="if(this.src!=='${imgFallback}'){this.onerror=null;this.src='${imgFallback}';}"` : ''} />`
             : `<div class="winner-img-placeholder" style="background:${w.gradient || 'var(--primary)'}"><span style="font-size:3rem">${w.emoji || '🏆'}</span></div>`;
           return `
           <div class="winner-card">
@@ -667,20 +671,28 @@ function renderResultCards(winners) {
   if (!winners.length) return '<p style="color:var(--text-muted);text-align:center;padding:40px">No results found for this filter.</p>';
   const rankCls = { 1: 'gold', 2: 'silver', 3: 'bronze' };
   const rankIcon = { 1: '🥇', 2: '🥈', 3: '🥉' };
-  return winners.map(w => `
+  return winners.map(w => {
+    const imgSrc = w.fileDataUrl || w.image;
+    const imgFallback = w.imageFallback || '';
+    const imgBlock = imgSrc
+      ? `<img class="result-art" src="${imgSrc}" alt="${escapeHtml(w.title)}" loading="lazy" ${imgFallback ? `onerror="if(this.src!=='${imgFallback}'){this.onerror=null;this.src='${imgFallback}';}"` : ''} />`
+      : `<div class="result-art-placeholder" style="background:${w.gradient || 'var(--primary)'}"><span style="font-size:1.2rem">${w.emoji || '🎨'}</span></div>`;
+    const rankPill = w.rank === 1 ? '<span class="pill pill-gold" style="align-self:center">1st</span>'
+      : w.rank === 2 ? '<span class="pill pill-gray" style="align-self:center">2nd</span>'
+      : w.rank === 3 ? '<span class="pill pill-primary" style="align-self:center">3rd</span>'
+      : '';
+    return `
     <div class="result-card">
       <div class="result-rank ${rankCls[w.rank] || 'gold'}">${rankIcon[w.rank] || '🏆'}</div>
-      ${w.fileDataUrl
-        ? `<img class="result-art" src="${w.fileDataUrl}" alt="${escapeHtml(w.title)}" />`
-        : `<div class="result-art-placeholder" style="background:${w.gradient || 'var(--primary)'}"><span style="font-size:1.2rem">${w.emoji || '🎨'}</span></div>`}
+      ${imgBlock}
       <div class="result-info">
         <div class="result-name">${escapeHtml(w.title)}</div>
         <div class="result-artist">by ${escapeHtml(w.artist)}</div>
         <div class="result-cat">${escapeHtml(w.category)} &middot; ${escapeHtml(w.ageGroup)} &middot; ${escapeHtml(w.month)}</div>
       </div>
-      <span class="pill ${w.rank === 1 ? 'pill-gold' : w.rank === 2 ? 'pill-gray' : 'pill-primary'}" style="align-self:center">${w.rank === 1 ? '1st' : w.rank === 2 ? '2nd' : '3rd'}</span>
-    </div>
-  `).join('');
+      ${rankPill}
+    </div>`;
+  }).join('');
 }
 
 
@@ -772,9 +784,11 @@ function initGallery() {
     }
 
     grid.innerHTML = filtered.map(g => {
-      const img = g.fileDataUrl
-        ? `<img class="gallery-img" src="${g.fileDataUrl}" alt="${escapeHtml(g.title)}" />`
-        : `<div class="gallery-img-placeholder" style="background:${g.gradient}"><span style="font-size:2.5rem">${g.emoji}</span></div>`;
+      const imgSrc = g.fileDataUrl || g.image;
+      const imgFallback = g.imageFallback || '';
+      const img = imgSrc
+        ? `<img class="gallery-img" src="${imgSrc}" alt="${escapeHtml(g.title)}" loading="lazy" ${imgFallback ? `onerror="if(this.src!=='${imgFallback}'){this.onerror=null;this.src='${imgFallback}';}"` : ''} />`
+        : `<div class="gallery-img-placeholder" style="background:${g.gradient || 'var(--primary)'}"><span style="font-size:2.5rem">${g.emoji || '🎨'}</span></div>`;
       const winnerBadge = g.resultStatus === 'Winner'
         ? `<span class="pill rank-gold" style="position:absolute;top:10px;left:10px;font-size:0.65rem">Winner</span>`
         : '';
