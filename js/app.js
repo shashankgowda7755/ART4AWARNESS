@@ -160,16 +160,30 @@ function navigate(page) {
 
 function getPage() {
   const page = window.location.hash.replace('#', '') || 'home';
-  // Contact has been merged into About — redirect for backward compat
+  // Contact has been merged into About — render About page when hash is #contact
   if (page === 'contact') {
-    window.location.hash = 'about';
     setTimeout(() => {
       const target = document.getElementById('get-in-touch');
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 200);
+    }, 250);
     return 'about';
   }
   return page;
+}
+
+// Smart Contact Us link — navigate to About page and scroll to contact section
+function navigateToContact(event) {
+  if (event) event.preventDefault();
+  if (window.location.hash === '#contact') {
+    // Already there, just scroll
+    const target = document.getElementById('get-in-touch');
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else {
+    window.location.hash = 'contact';
+  }
+  // Close mobile menu if open
+  const mobileNav = document.getElementById('main-nav');
+  if (mobileNav) mobileNav.classList.remove('open');
 }
 
 function renderPage() {
@@ -179,9 +193,10 @@ function renderPage() {
   // Clean up previous page resources
   if (_carouselInterval) { clearInterval(_carouselInterval); _carouselInterval = null; }
 
-  // Update nav active state
+  // Update nav active state — use raw hash for contact (since it renders 'about')
+  const rawHash = window.location.hash.replace('#', '') || 'home';
   document.querySelectorAll('.nav-link').forEach(l => {
-    l.classList.toggle('active', l.dataset.page === page);
+    l.classList.toggle('active', l.dataset.page === rawHash);
   });
 
   // Close mobile menu on navigate
@@ -481,11 +496,13 @@ function renderRegStep() {
   let body = '';
 
   if (regStep === 1) {
+    // Only carry over fields the user has actively typed during this wizard session.
+    // Do NOT pre-fill from logged-in account (avoids stale "Google User" defaults).
     body = `
       <h3 style="margin-bottom:24px">Personal Information</h3>
       <div class="form-row">
         <div class="form-group"><label class="form-label" for="rf-name">Full Name *</label>
-          <input id="rf-name" class="form-input" value="${escapeHtml(user?.name || '')}" placeholder="Student's full name"/></div>
+          <input id="rf-name" class="form-input" value="${escapeHtml(regData.name || '')}" placeholder="Student's full name"/></div>
         <div class="form-group"><label class="form-label" for="rf-dob">Date of Birth *</label>
           <input id="rf-dob" class="form-input" type="date" value="${regData.dob || ''}" /></div>
       </div>
@@ -502,9 +519,9 @@ function renderRegStep() {
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label" for="rf-email">Email *</label>
-          <input id="rf-email" class="form-input" type="email" value="${escapeHtml(regData.email || user?.email || '')}" /></div>
+          <input id="rf-email" class="form-input" type="email" value="${escapeHtml(regData.email || '')}" placeholder="you@example.com" /></div>
         <div class="form-group"><label class="form-label" for="rf-mobile">Mobile</label>
-          <input id="rf-mobile" class="form-input" type="tel" value="${escapeHtml(regData.mobile || user?.mobile || '')}" placeholder="+91 XXXXXXXXXX" /></div>
+          <input id="rf-mobile" class="form-input" type="tel" value="${escapeHtml(regData.mobile || '')}" placeholder="+91 XXXXXXXXXX" /></div>
       </div>
       <div class="form-group"><label class="form-label" for="rf-school">School Name *</label>
         <input id="rf-school" class="form-input" placeholder="Your school name" value="${escapeHtml(regData.school || '')}" /></div>
