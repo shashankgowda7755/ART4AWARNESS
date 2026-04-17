@@ -247,11 +247,9 @@ window.addEventListener('DOMContentLoaded', renderPage);
 // ─── Auth UI ───
 function updateHeaderAuth() {
   const loginBtn = document.getElementById('btn-header-login');
-  const regBtn = document.getElementById('btn-header-register');
   const dashBtn = document.getElementById('btn-header-dash');
   const loggedIn = AUTH.isLoggedIn();
   if (loginBtn) loginBtn.classList.toggle('hidden', loggedIn);
-  if (regBtn) regBtn.classList.toggle('hidden', loggedIn);
   if (dashBtn) dashBtn.classList.toggle('hidden', !loggedIn);
 }
 
