@@ -820,40 +820,40 @@ function renderOrganization() {
     <section class="org-hero">
       <div class="container">
         <span class="pill pill-gold" style="margin-bottom:12px">PARTNER WITH US</span>
-        <h1>For Organizations &amp; CSR Partners</h1>
-        <p>Join India's most impactful art-for-environment program. Double your CSR ROI with social and environmental impact in one platform.</p>
-        <button class="btn btn-primary btn-lg" onclick="navigate('contact')">Become a Sponsor &rarr;</button>
+        <h1>Schools, Organizations &amp; Changemakers</h1>
+        <p>If you believe in nurturing the next generation of creative thinkers and environmental advocates — there's a place for you here. Schools, companies, NGOs, and individuals all welcome.</p>
+        <a href="#partner-form" class="btn btn-primary btn-lg" onclick="setTimeout(()=>document.getElementById('partner-name')?.scrollIntoView({behavior:'smooth',block:'center'}),100)">Get In Touch &rarr;</a>
       </div>
     </section>
 
     <!-- How It Works -->
     <section class="section container">
       <h2 class="section-title">How It Works</h2>
-      <p class="section-subtitle">A simple, transparent process from sponsorship to verified environmental impact.</p>
+      <p class="section-subtitle">A simple, transparent process from partnership to real impact in classrooms across India.</p>
       <div class="how-it-works">
         <div class="how-step">
           <div class="how-num">01</div>
           <div class="how-icon">🤝</div>
-          <h4>Partner</h4>
-          <p style="font-size:0.88rem;margin-top:8px">Sign a CSR sponsorship agreement aligned with Schedule VII compliance.</p>
+          <h4>Connect</h4>
+          <p style="font-size:0.88rem;margin-top:8px">Reach out to us. We'll have a conversation about your goals and how we can collaborate.</p>
         </div>
         <div class="how-step">
           <div class="how-num">02</div>
           <div class="how-icon">🎨</div>
           <h4>Engage</h4>
-          <p style="font-size:0.88rem;margin-top:8px">Thousands of students participate in branded monthly themes with your organization's name.</p>
+          <p style="font-size:0.88rem;margin-top:8px">Students across India participate in our monthly themed competitions, with your support powering the platform.</p>
         </div>
         <div class="how-step">
           <div class="how-num">03</div>
           <div class="how-icon">🌱</div>
           <h4>Impact</h4>
-          <p style="font-size:0.88rem;margin-top:8px">Monthly impact reports covering student engagement, artwork quality, and awareness reach.</p>
+          <p style="font-size:0.88rem;margin-top:8px">Real student engagement, real artwork, real environmental awareness — across schools, cities, and states.</p>
         </div>
         <div class="how-step">
           <div class="how-num">04</div>
           <div class="how-icon">📊</div>
           <h4>Report</h4>
-          <p style="font-size:0.88rem;margin-top:8px">Transparent financial reporting and CSR compliance documentation delivered quarterly.</p>
+          <p style="font-size:0.88rem;margin-top:8px">Regular updates on participation, reach, and the stories of young artists making a difference.</p>
         </div>
       </div>
     </section>
@@ -862,7 +862,7 @@ function renderOrganization() {
     <section class="section" style="background:var(--bg-white)">
       <div class="container">
         <h2 class="section-title">Why Partner With Us?</h2>
-        <p class="section-subtitle">A unique CSR opportunity that qualifies under multiple Schedule VII clauses of the Companies Act, 2013.</p>
+        <p class="section-subtitle">Whether you're driven by purpose, education, or community impact — there's a meaningful way to be part of this movement.</p>
         <div class="grid-3">
           ${benefits.map(b => `
             <div class="benefit-card">
@@ -875,27 +875,52 @@ function renderOrganization() {
       </div>
     </section>
 
-    <!-- Financial Model -->
+    <!-- Want to Partner With Us -->
     <section class="section container">
-      <h2 class="section-title">The "Zero-Cost Impact" Model</h2>
-      <p class="section-subtitle">See exactly where every rupee goes. Maximum impact, minimum overhead.</p>
-      <div style="max-width:600px;margin:0 auto;background:var(--bg-white);border-radius:var(--radius-xl);padding:40px;box-shadow:var(--shadow-md)">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border-light)">
-          <span style="font-weight:600;color:var(--navy)">Sponsor Commitment</span>
-          <span style="font-family:var(--font-heading);font-weight:900;color:var(--primary);font-size:1.2rem">\u20B910,00,000/mo</span>
+      <div style="max-width:720px;margin:0 auto;text-align:center">
+        <span class="pill pill-primary" style="margin-bottom:16px">PARTNERSHIPS</span>
+        <h2 class="section-title">Want to Partner With Us?</h2>
+        <p class="section-subtitle">Whether you're a school, an organization, a CSR team, or simply someone who believes in the power of creative expression — we'd love to hear from you. Let's build something meaningful together.</p>
+      </div>
+
+      <div style="max-width:720px;margin:32px auto 0;background:var(--bg-white);border-radius:var(--radius-xl);padding:40px;box-shadow:var(--shadow-md)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="partner-name">Your Name *</label>
+            <input id="partner-name" class="form-input" type="text" placeholder="Full name" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="partner-org">Organization / School *</label>
+            <input id="partner-org" class="form-input" type="text" placeholder="Company, school, or institution name" />
+          </div>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border-light)">
-          <span style="font-weight:600;color:var(--navy)">Platform Operations</span>
-          <span style="font-family:var(--font-heading);font-weight:700;color:var(--error);font-size:1rem">-\u20B93,00,000</span>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="partner-email">Email *</label>
+            <input id="partner-email" class="form-input" type="email" placeholder="you@organization.com" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="partner-phone">Phone (optional)</label>
+            <input id="partner-phone" class="form-input" type="tel" placeholder="+91 XXXXXXXXXX" />
+          </div>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border-light);background:var(--primary-pale);margin:0 -40px;padding-left:40px;padding-right:40px">
-          <span style="font-weight:800;color:var(--primary)">Green Surplus</span>
-          <span style="font-family:var(--font-heading);font-weight:900;color:var(--primary);font-size:1.3rem">\u20B97,00,000</span>
+        <div class="form-group">
+          <label class="form-label" for="partner-type">I represent a *</label>
+          <select id="partner-type" class="form-select">
+            <option value="">Select one</option>
+            <option>School</option>
+            <option>Corporate / CSR Team</option>
+            <option>NGO / Foundation</option>
+            <option>Individual Donor</option>
+            <option>Media / Press</option>
+            <option>Other</option>
+          </select>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0">
-          <span style="font-weight:600;color:var(--navy)">Students Reached / Month</span>
-          <span style="font-family:var(--font-heading);font-weight:900;color:var(--success);font-size:1.3rem">20,000+ 🎨</span>
+        <div class="form-group">
+          <label class="form-label" for="partner-message">Tell us how you'd like to partner *</label>
+          <textarea id="partner-message" class="form-textarea" placeholder="What's your idea? How would you like to support or collaborate with us?" style="min-height:120px"></textarea>
         </div>
+        <button class="form-submit" onclick="submitPartnershipForm()">Send Partnership Inquiry &rarr;</button>
       </div>
     </section>
 
@@ -920,9 +945,9 @@ function renderOrganization() {
     <!-- CTA -->
     <section class="section prizes-section">
       <div class="container text-center">
-        <h2 style="color:white;margin-bottom:16px">Ready to Make an Impact?</h2>
-        <p style="color:rgba(255,255,255,0.7);max-width:480px;margin:0 auto 32px">Contact us to explore CSR partnership opportunities and join India's most innovative art-for-environment initiative.</p>
-        <button class="btn btn-gold btn-lg" onclick="navigate('contact')">Contact Us &rarr;</button>
+        <h2 style="color:white;margin-bottom:16px">Let's Create Together</h2>
+        <p style="color:rgba(255,255,255,0.7);max-width:520px;margin:0 auto 32px">Schools, organizations, and individuals — anyone who shares our belief in creativity as a force for good is welcome here.</p>
+        <button class="btn btn-gold btn-lg" onclick="navigate('contact')">Get in Touch &rarr;</button>
       </div>
     </section>
   `;
@@ -1169,6 +1194,39 @@ function submitContactForm() {
   document.getElementById('contact-message').value = '';
   const subjectEl = document.getElementById('contact-subject');
   if (subjectEl) subjectEl.selectedIndex = 0;
+}
+
+function submitPartnershipForm() {
+  const name = document.getElementById('partner-name')?.value.trim();
+  const org = document.getElementById('partner-org')?.value.trim();
+  const email = document.getElementById('partner-email')?.value.trim();
+  const phone = document.getElementById('partner-phone')?.value.trim();
+  const type = document.getElementById('partner-type')?.value;
+  const message = document.getElementById('partner-message')?.value.trim();
+  if (!name || !org || !email || !type || !message) {
+    showToast('Please fill in all required fields', 'error');
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast('Please enter a valid email address', 'error');
+    return;
+  }
+  // Persist to localStorage for admin to review (stored alongside contact messages with subject = "Partnership")
+  try {
+    const inquiries = JSON.parse(localStorage.getItem('aba_contact_messages') || '[]');
+    inquiries.unshift({
+      id: Date.now(), name, email, subject: 'Partnership: ' + type,
+      message: 'Organization: ' + org + (phone ? ' | Phone: ' + phone : '') + '\n\n' + message,
+      date: new Date().toLocaleDateString('en-IN')
+    });
+    localStorage.setItem('aba_contact_messages', JSON.stringify(inquiries));
+  } catch (e) { /* quota */ }
+  showToast('Thank you! We\'ll be in touch within 48 hours.', 'success');
+  ['partner-name', 'partner-org', 'partner-email', 'partner-phone', 'partner-message'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  const typeEl = document.getElementById('partner-type');
+  if (typeEl) typeEl.selectedIndex = 0;
 }
 
 
