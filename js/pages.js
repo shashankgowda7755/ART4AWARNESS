@@ -880,7 +880,7 @@ function renderOrganization() {
       <div style="max-width:720px;margin:0 auto;text-align:center">
         <span class="pill pill-primary" style="margin-bottom:16px">PARTNERSHIPS</span>
         <h2 class="section-title">Want to Partner With Us?</h2>
-        <p class="section-subtitle">Whether you're a school, an organization, a CSR team, or simply someone who believes in the power of creative expression — we'd love to hear from you. Let's build something meaningful together.</p>
+        <p class="section-subtitle">Whether you're a school, an organization, or simply someone who believes in the power of creative expression — we'd love to hear from you. Let's build something meaningful together.</p>
       </div>
 
       <div style="max-width:720px;margin:32px auto 0;background:var(--bg-white);border-radius:var(--radius-xl);padding:40px;box-shadow:var(--shadow-md)">
@@ -909,7 +909,7 @@ function renderOrganization() {
           <select id="partner-type" class="form-select">
             <option value="">Select one</option>
             <option>School</option>
-            <option>Corporate / CSR Team</option>
+            <option>Corporate / Company</option>
             <option>NGO / Foundation</option>
             <option>Individual Donor</option>
             <option>Media / Press</option>
@@ -947,7 +947,7 @@ function renderOrganization() {
       <div class="container text-center">
         <h2 style="color:white;margin-bottom:16px">Let's Create Together</h2>
         <p style="color:rgba(255,255,255,0.7);max-width:520px;margin:0 auto 32px">Schools, organizations, and individuals — anyone who shares our belief in creativity as a force for good is welcome here.</p>
-        <button class="btn btn-gold btn-lg" onclick="navigate('contact')">Get in Touch &rarr;</button>
+        <button class="btn btn-gold btn-lg" onclick="navigate('about')">Get in Touch &rarr;</button>
       </div>
     </section>
   `;
@@ -969,10 +969,10 @@ function renderAbout() {
           <h1 style="margin-bottom:16px">About Art for Awareness</h1>
           <p style="margin-bottom:16px">Art for Awareness is India's premier free monthly art competition platform for students aged 6&ndash;17. We believe that every child's creativity is a force for planetary change.</p>
           <p style="margin-bottom:16px">Unlike traditional art competitions that are sporadic, commercial, and urban-centric, we've built a permanent, recurring Creative Infrastructure. Our platform operates on a monthly cycle, fostering consistent artistic practice and habit formation among students.</p>
-          <p style="margin-bottom:24px">We are 100% CSR-funded, fully compliant with the Digital Personal Data Protection Act 2023, and committed to fostering environmental awareness through creative expression.</p>
+          <p style="margin-bottom:24px">We are fully compliant with the Digital Personal Data Protection Act 2023 and committed to fostering environmental awareness through creative expression.</p>
           <div style="display:flex;gap:12px;flex-wrap:wrap">
             <button class="btn btn-primary" onclick="navigate('organization')">Partner With Us</button>
-            <button class="btn btn-outline" onclick="navigate('contact')">Get In Touch</button>
+            <button class="btn btn-outline" onclick="navigate('about')">Get In Touch</button>
           </div>
         </div>
         <div class="about-visual">
@@ -1074,7 +1074,85 @@ function renderAbout() {
         </div>
         <div style="padding:24px;border:1px solid var(--border-light);border-radius:var(--radius-lg)">
           <h4 style="margin-bottom:8px">🛡️ IP Protection</h4>
-          <p style="font-size:0.88rem">Students retain full copyright. Our license is non-exclusive, for platform operations and CSR reporting only.</p>
+          <p style="font-size:0.88rem">Students retain full copyright. Our license is non-exclusive, for platform display and educational use only.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT (merged from old Contact page) -->
+    <section class="section" style="background:var(--bg-white)" id="get-in-touch">
+      <div class="container">
+        <div style="text-align:center;max-width:560px;margin:0 auto 40px">
+          <span class="pill pill-primary mb-16">GET IN TOUCH</span>
+          <h2 class="section-title" style="margin-bottom:8px">Talk to Us</h2>
+          <p class="section-subtitle">Questions, ideas, or want to be a part of this? Drop us a message — we read every one.</p>
+        </div>
+
+        <div class="contact-grid">
+          <!-- Info Cards -->
+          <div>
+            <div class="contact-info-card">
+              <div class="contact-icon">📧</div>
+              <div class="contact-details">
+                <h4>Email Us</h4>
+                <p>hello@art4awareness.in</p>
+                <p style="color:var(--text-muted);font-size:0.8rem">We respond within 24 hours</p>
+              </div>
+            </div>
+            <div class="contact-info-card">
+              <div class="contact-icon">📍</div>
+              <div class="contact-details">
+                <h4>Based In</h4>
+                <p>Bengaluru, Karnataka, India</p>
+                <p style="color:var(--text-muted);font-size:0.8rem">Reaching students nationwide</p>
+              </div>
+            </div>
+            <div class="contact-info-card">
+              <div class="contact-icon">🤝</div>
+              <div class="contact-details">
+                <h4>Partnerships</h4>
+                <p>partnerships@art4awareness.in</p>
+                <p style="color:var(--text-muted);font-size:0.8rem">Schools, organizations, and individuals</p>
+              </div>
+            </div>
+
+            <div style="background:var(--primary-pale);border-radius:var(--radius-lg);padding:24px;margin-top:16px">
+              <h4 style="color:var(--primary);margin-bottom:8px">🎓 For Schools &amp; Teachers</h4>
+              <p style="font-size:0.88rem">Want to register your school? Bring monthly art competitions to your students at zero cost.</p>
+              <button class="btn btn-primary btn-sm mt-16" onclick="startRegistration()">Register Your School</button>
+            </div>
+          </div>
+
+          <!-- Contact Form -->
+          <div style="background:white;border-radius:var(--radius-xl);padding:40px;box-shadow:var(--shadow-md)">
+            <h3 style="margin-bottom:24px">Send Us a Message</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Your Name *</label>
+                <input id="contact-name" class="form-input" type="text" placeholder="Full name" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input id="contact-email" class="form-input" type="email" placeholder="you@example.com" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <select id="contact-subject" class="form-select">
+                <option>General Inquiry</option>
+                <option>Partnership</option>
+                <option>School Registration</option>
+                <option>Technical Support</option>
+                <option>Media / Press</option>
+                <option>Feedback / Suggestion</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Your Message *</label>
+              <textarea id="contact-message" class="form-textarea" placeholder="Tell us how we can help..." style="min-height:140px"></textarea>
+            </div>
+            <button class="form-submit" onclick="submitContactForm()">Send Message &rarr;</button>
+          </div>
         </div>
       </div>
     </section>
@@ -1084,7 +1162,7 @@ function renderAbout() {
 
 
 // ═══════════════════════════════════════════════
-//  CONTACT PAGE
+//  CONTACT PAGE (deprecated — merged into About; kept for #contact deep links)
 // ═══════════════════════════════════════════════
 function renderContact() {
   const el = document.createElement('div');

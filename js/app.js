@@ -159,7 +159,17 @@ function navigate(page) {
 }
 
 function getPage() {
-  return window.location.hash.replace('#', '') || 'home';
+  const page = window.location.hash.replace('#', '') || 'home';
+  // Contact has been merged into About — redirect for backward compat
+  if (page === 'contact') {
+    window.location.hash = 'about';
+    setTimeout(() => {
+      const target = document.getElementById('get-in-touch');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+    return 'about';
+  }
+  return page;
 }
 
 function renderPage() {

@@ -176,7 +176,7 @@ const DATA = {
     },
     {
       q: "Is there any registration fee or participation cost?",
-      a: "Absolutely not. Art for Awareness is 100% free to participate. Our platform is funded through CSR partnerships, ensuring every student can participate regardless of their background."
+      a: "Absolutely not. Art for Awareness is 100% free to participate. Our platform is supported by partner organizations and individuals who believe in nurturing young creative voices, ensuring every student can participate regardless of their background."
     },
     {
       q: "How do the monthly environmental themes work?",
@@ -228,9 +228,9 @@ const DATA = {
 
   // ─── Organization page ───
   orgBenefits: [
-    { icon: "🏆", title: "National Visibility", desc: "Get your organization featured across our platform, social media, and CSR reports reaching 20,000+ students nationwide." },
+    { icon: "🏆", title: "National Visibility", desc: "Get your organization featured across our platform and shared with our community of students, schools, and partners across India." },
     { icon: "📊", title: "Measurable Impact", desc: "Receive detailed monthly impact reports covering student engagement, artwork submissions, and trees planted in your name." },
-    { icon: "🎓", title: "Education CSR Compliance", desc: "Our platform qualifies under Schedule VII Clauses (ii), (iv) & (v) of the Companies Act, 2013, maximizing your CSR eligibility." },
+    { icon: "🎓", title: "Education-Focused", desc: "Our platform aligns with the National Education Policy (NEP 2020) and supports art integration in schools across India." },
     { icon: "🌍", title: "Environmental Awareness", desc: "Monthly themes tied to global environmental awareness days. Your brand champions environmental consciousness through art." },
     { icon: "👨‍🏫", title: "Teacher Network", desc: "Gain access to a nationwide network of 1,000+ verified school teachers across Tier 1, 2, and 3 cities." },
     { icon: "🔒", title: "DPDP Compliant", desc: "Fully compliant with India's Digital Personal Data Protection Act 2023, with teacher-mediated student data handling." }
