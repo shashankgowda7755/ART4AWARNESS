@@ -290,7 +290,47 @@ nav { display: flex; align-items: center; gap: 4px; flex: 1; }
 .winner-category { background: var(--border); color: var(--text-secondary); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; }
 .winner-age { color: var(--text-muted); font-style: italic; font-size: 0.85rem; }
 
-/* ─── CATEGORIES ─── */
+/* ─── EVENT CARD with image ─── */
+.event-card.has-image {
+  padding: 0; overflow: hidden; display: flex; flex-direction: column;
+}
+.event-card.has-image .event-image {
+  width: 100%; aspect-ratio: 16/9; overflow: hidden;
+  background: var(--primary-pale);
+}
+.event-card.has-image .event-image img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.event-card.has-image:hover .event-image img { transform: scale(1.04); }
+.event-card.has-image .event-card-inner {
+  padding: 24px; display: flex; flex-direction: column; gap: 16px; flex: 1;
+}
+
+/* ─── CATEGORIES with image ─── */
+.category-card.has-image {
+  padding: 0; overflow: hidden; display: flex; flex-direction: column;
+  background: var(--bg-card); border: 1px solid var(--border-light);
+}
+.category-card.has-image .category-image {
+  width: 100%; aspect-ratio: 4/3; overflow: hidden; background: var(--primary-pale);
+}
+.category-card.has-image .category-image img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.category-card.has-image:hover .category-image img { transform: scale(1.05); }
+.category-card.has-image .category-content { padding: 24px; }
+.category-card.has-image.dark { background: var(--navy); }
+.category-card.has-image.dark h3 { color: white; }
+.category-card.has-image.dark p { color: rgba(255,255,255,0.75); }
+.category-card.has-image.teal { background: var(--primary); }
+.category-card.has-image.teal h3 { color: white; }
+.category-card.has-image.teal p { color: rgba(255,255,255,0.85); }
+.category-card.has-image.dark .category-age-pill { background: rgba(255,255,255,0.15); color: white; }
+.category-card.has-image.teal .category-age-pill { background: rgba(255,255,255,0.2); color: white; }
+
+/* ─── CATEGORIES (legacy) ─── */
 .category-card {
   border-radius: var(--radius-lg); padding: 32px; transition: var(--transition);
   cursor: pointer; overflow: hidden; position: relative;

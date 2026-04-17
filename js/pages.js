@@ -146,22 +146,26 @@ function renderHome() {
       <p class="section-subtitle">Join thousands of young artists from across India in our monthly themed competitions.</p>
       <div class="grid-3">
         ${upcomingEvents.map(e => `
-          <div class="event-card">
-            <div class="event-flex">
-              <div>
-                <div class="event-date-num">${String(e.day).padStart(2, '0')}</div>
-                <div class="event-month">${e.monthName}</div>
+          <div class="event-card ${e.image ? 'has-image' : ''}">
+            ${e.image ? `<div class="event-image"><img src="${e.image}" alt="${escapeHtml(e.title)}" loading="lazy" /></div>` : ''}
+            <div class="event-card-inner">
+              <div class="event-flex">
+                <div>
+                  <div class="event-date-num">${String(e.day).padStart(2, '0')}</div>
+                  <div class="event-month">${e.monthName}</div>
+                </div>
+                <div style="flex:1">
+                  <span class="pill pill-primary" style="margin-bottom:8px">${e.type}</span>
+                  <h3 class="event-title">${e.title}</h3>
+                  ${e.theme ? `<p style="font-size:0.78rem;color:var(--secondary);font-weight:600;margin-top:4px">${e.theme}</p>` : ''}
+                </div>
               </div>
-              <div style="flex:1">
-                <span class="pill pill-primary" style="margin-bottom:8px">${e.type}</span>
-                <h3 class="event-title">${e.title}</h3>
+              <p class="event-desc">${e.description}</p>
+              <div class="event-card-footer">
+                ${e.prize ? `<p style="font-weight:700;color:var(--gold);font-size:0.88rem;margin-bottom:12px">🏆 ${e.prize}</p>` : ''}
+                ${e.deadline ? `<p style="font-size:0.82rem;color:var(--text-muted)">Deadline: ${e.deadline}</p>` : ''}
+                <button class="btn btn-primary btn-sm mt-8" onclick="startRegistration()">Submit Entry &rarr;</button>
               </div>
-            </div>
-            <p class="event-desc">${e.description}</p>
-            <div class="event-card-footer">
-              ${e.prize ? `<p style="font-weight:700;color:var(--gold);font-size:0.88rem;margin-bottom:12px">🏆 ${e.prize}</p>` : ''}
-              ${e.deadline ? `<p style="font-size:0.82rem;color:var(--text-muted)">Deadline: ${e.deadline}</p>` : ''}
-              <button class="btn btn-primary btn-sm mt-8" onclick="startRegistration()">Submit Entry &rarr;</button>
             </div>
           </div>
         `).join('')}
@@ -231,11 +235,13 @@ function renderHome() {
       <p class="section-subtitle">Six age-appropriate categories designed to nurture every stage of artistic development.</p>
       <div class="grid-3">
         ${categories.map(c => `
-          <div class="category-card ${c.style}">
-            <div class="category-icon">${c.icon}</div>
-            <span class="category-age-pill">${c.label}</span>
-            <h3>${c.title}</h3>
-            <p style="margin-top:8px;font-size:0.88rem">${c.desc}</p>
+          <div class="category-card has-image ${c.style}">
+            ${c.image ? `<div class="category-image"><img src="${c.image}" alt="${escapeHtml(c.title)}" loading="lazy" /></div>` : ''}
+            <div class="category-content">
+              <span class="category-age-pill">${c.label}</span>
+              <h3>${c.title}</h3>
+              <p style="margin-top:8px;font-size:0.88rem">${c.desc}</p>
+            </div>
           </div>
         `).join('')}
       </div>
@@ -556,8 +562,10 @@ function showEventDetail(id) {
   const content = document.getElementById('event-modal-content');
   const typePill = { competition: 'pill-primary', workshop: 'pill-gold', special: 'pill-gray' };
   content.innerHTML = `
+    ${e.image ? `<div style="margin:-40px -40px 20px;aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-xl) var(--radius-xl) 0 0"><img src="${e.image}" alt="${escapeHtml(e.title)}" style="width:100%;height:100%;object-fit:cover" /></div>` : ''}
     <span class="pill ${typePill[e.type] || 'pill-gray'}" style="margin-bottom:16px">${e.type.toUpperCase()}</span>
     <h2 style="margin-bottom:12px">${e.title}</h2>
+    ${e.theme ? `<p style="color:var(--secondary);font-weight:600;font-size:0.9rem;margin-bottom:8px">${e.theme}</p>` : ''}
     <p style="margin-bottom:20px">${e.description}</p>
     <div style="background:var(--bg);border-radius:var(--radius-md);padding:16px;margin-bottom:20px">
       <p style="font-size:0.88rem"><strong>Date:</strong> ${e.monthName} ${e.day}, ${e.year}</p>

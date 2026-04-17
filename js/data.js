@@ -11,6 +11,7 @@ const DATA = {
       id: 1, day: 1, month: 4, year: 2026, monthName: "APRIL",
       title: "Earth Palette", type: "competition",
       theme: "World Earth Day",
+      image: "assets/themes/apr-earth-palette.webp",
       description: "Our planet is the ultimate canvas. Paint, sketch, or digitally create your vision of Earth — its landscapes, ecosystems, or a greener future. What does our planet mean to you?",
       time: "10:00 AM – 10:00 PM", deadline: "April 25, 2026",
       prize: "₹10,000 + Certificate + National Feature"
@@ -117,32 +118,32 @@ const DATA = {
   categories: [
     {
       id: "6-7", label: "Ages 6–7", title: "Young Explorers",
-      style: "light",
+      style: "light", image: "assets/categories/young-explorers.webp",
       desc: "Introduction to art for our youngest participants. Drawing, colouring and simple compositions.", icon: "🌟"
     },
     {
       id: "8-9", label: "Ages 8–9", title: "Creative Sparks",
-      style: "light",
+      style: "light", image: "assets/categories/creative-sparks.webp",
       desc: "Building foundational skills through imaginative expression and guided themes.", icon: "✏️"
     },
     {
       id: "10-11", label: "Ages 10–11", title: "Rising Artists",
-      style: "dark",
+      style: "dark", image: "assets/categories/rising-artists.webp",
       desc: "For artists discovering their unique style. Winning artworks featured in our national print magazine.", icon: "🖌️"
     },
     {
       id: "12-13", label: "Ages 12–13", title: "The Rising Tide",
-      style: "dark",
+      style: "dark", image: "assets/categories/rising-tide.webp",
       desc: "Developing technical skills. Works that demonstrate depth, technique, and creative vision.", icon: "🎭"
     },
     {
       id: "14-15", label: "Ages 14–15", title: "Vanguard Academy",
-      style: "light",
+      style: "light", image: "assets/categories/vanguard-academy.webp",
       desc: "Pre-professional portfolio development with opportunities for university credit and studio internships.", icon: "🏆"
     },
     {
       id: "16-17", label: "Ages 16–17", title: "Open Canvas",
-      style: "teal",
+      style: "teal", image: "assets/categories/open-canvas.webp",
       desc: "Community-driven challenges. Voted by our platform members globally. No boundaries, no limits.", icon: "🌐"
     }
   ],
