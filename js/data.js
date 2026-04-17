@@ -1,5 +1,5 @@
 // ============================================
-//  AWARENESS BY ART — Data Store
+//  ART FOR AWARENESS — Data Store
 // ============================================
 
 const DATA = {

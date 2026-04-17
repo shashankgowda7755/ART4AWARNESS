@@ -1,5 +1,5 @@
 // ============================================
-//  AWARENESS BY ART — Core App & Router
+//  ART FOR AWARENESS — Core App & Router
 //  Fixed: Auth, XSS, Modals, Certificates, Validation
 // ============================================
 
@@ -171,21 +171,6 @@ function getPage() {
   return page;
 }
 
-// Smart Contact Us link — navigate to About page and scroll to contact section
-function navigateToContact(event) {
-  if (event) event.preventDefault();
-  if (window.location.hash === '#contact') {
-    // Already there, just scroll
-    const target = document.getElementById('get-in-touch');
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  } else {
-    window.location.hash = 'contact';
-  }
-  // Close mobile menu if open
-  const mobileNav = document.getElementById('main-nav');
-  if (mobileNav) mobileNav.classList.remove('open');
-}
-
 function renderPage() {
   const page = getPage();
   const outlet = document.getElementById('page-content');
@@ -220,7 +205,6 @@ function renderPage() {
     gallery: renderGallery,
     organization: renderOrganization,
     about: renderAbout,
-    contact: renderContact,
     dashboard: renderDashboard,
   };
 
@@ -399,22 +383,6 @@ function doSignup() {
   showToast('Account created! Welcome, ' + escapeHtml(name) + '!', 'success');
   // Redirect new user to dashboard
   navigate('dashboard');
-}
-
-function socialLogin(provider) {
-  const email = provider.toLowerCase() + '_user@awarenessbyart.in';
-  const existing = JSON.parse(localStorage.getItem('aba_user_' + email) || 'null');
-
-  if (!existing) {
-    const user = { name: provider + ' User', email, provider, joined: new Date().toLocaleDateString('en-IN') };
-    localStorage.setItem('aba_user_' + email, JSON.stringify(user));
-  }
-
-  AUTH.save({ name: existing?.name || (provider + ' User'), email, provider, joined: existing?.joined || new Date().toLocaleDateString('en-IN') });
-  closeModal('login-modal');
-  closeModal('signup-modal');
-  updateHeaderAuth();
-  showToast('Signed in with ' + provider + '!', 'success');
 }
 
 function doLogout() {
@@ -943,7 +911,7 @@ function downloadCertificate() {
 
   // Download
   const link = document.createElement('a');
-  link.download = 'AwarenessbyArt_Certificate.png';
+  link.download = 'ArtForAwareness_Certificate.png';
   link.href = canvas.toDataURL('image/png');
   link.click();
   showToast('Certificate downloaded!', 'success');

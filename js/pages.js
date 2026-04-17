@@ -1,5 +1,5 @@
 // ============================================
-//  AWARENESS BY ART — Page Renderers & Init Hooks
+//  ART FOR AWARENESS — Page Renderers & Init Hooks
 // ============================================
 
 // ─── 404 Page ───
@@ -822,7 +822,7 @@ function renderOrganization() {
         <span class="pill pill-gold" style="margin-bottom:12px">PARTNER WITH US</span>
         <h1>Schools, Organizations &amp; Changemakers</h1>
         <p>If you believe in nurturing the next generation of creative thinkers and environmental advocates — there's a place for you here. Schools, companies, NGOs, and individuals all welcome.</p>
-        <a href="#partner-form" class="btn btn-primary btn-lg" onclick="setTimeout(()=>document.getElementById('partner-name')?.scrollIntoView({behavior:'smooth',block:'center'}),100)">Get In Touch &rarr;</a>
+        <a href="javascript:void(0)" class="btn btn-primary btn-lg" onclick="event.preventDefault();document.getElementById('partner-name')?.scrollIntoView({behavior:'smooth',block:'center'});document.getElementById('partner-name')?.focus()">Get In Touch &rarr;</a>
       </div>
     </section>
 
@@ -1026,21 +1026,21 @@ function renderAbout() {
       <h2 class="section-title">Our Mission Pillars</h2>
       <div class="grid-3 mt-32">
         <div class="card">
-          <div class="card-body card-centered"
+          <div class="card-body card-centered">
             <div class="empty-state-icon">🎓</div>
             <h3>Education</h3>
             <p style="margin-top:12px;font-size:0.88rem">Supporting NEP 2020 art integration mandates by providing monthly themes as ready-made lesson plans for teachers across India.</p>
           </div>
         </div>
         <div class="card">
-          <div class="card-body card-centered"
+          <div class="card-body card-centered">
             <div class="empty-state-icon">🌱</div>
             <h3>Environment</h3>
             <p style="margin-top:12px;font-size:0.88rem">Monthly themes tied to environmental awareness days, building a generation that understands and advocates for the planet.</p>
           </div>
         </div>
         <div class="card">
-          <div class="card-body card-centered"
+          <div class="card-body card-centered">
             <div class="empty-state-icon">🤝</div>
             <h3>Inclusivity</h3>
             <p style="margin-top:12px;font-size:0.88rem">Free participation, teacher-mediated model, and support for Tier 2/3 cities ensure art recognition reaches every child.</p>
@@ -1159,96 +1159,6 @@ function renderAbout() {
   return el;
 }
 
-
-// ═══════════════════════════════════════════════
-//  CONTACT PAGE (deprecated — merged into About; kept for #contact deep links)
-// ═══════════════════════════════════════════════
-function renderContact() {
-  const el = document.createElement('div');
-
-  el.innerHTML = `
-    <section class="section container" style="min-height:80vh">
-      <h1 class="section-title" style="margin-bottom:8px">Contact Us</h1>
-      <p class="section-subtitle">Have questions? Want to partner? We'd love to hear from you.</p>
-
-      <div class="contact-grid mt-32">
-        <!-- Info Cards -->
-        <div>
-          <div class="contact-info-card">
-            <div class="contact-icon">📧</div>
-            <div class="contact-details">
-              <h4>Email Us</h4>
-              <p>hello@art4awareness.in</p>
-              <p style="color:var(--text-muted);font-size:0.8rem">We respond within 24 hours</p>
-            </div>
-          </div>
-          <div class="contact-info-card">
-            <div class="contact-icon">📞</div>
-            <div class="contact-details">
-              <h4>Call Us</h4>
-              <p>Contact us via email</p>
-              <p style="color:var(--text-muted);font-size:0.8rem">We respond within 24 hours</p>
-            </div>
-          </div>
-          <div class="contact-info-card">
-            <div class="contact-icon">📍</div>
-            <div class="contact-details">
-              <h4>Visit Us</h4>
-              <p>Bengaluru, Karnataka, India</p>
-              <p style="color:var(--text-muted);font-size:0.8rem">By appointment only</p>
-            </div>
-          </div>
-          <div class="contact-info-card">
-            <div class="contact-icon">🤝</div>
-            <div class="contact-details">
-              <h4>CSR Partnerships</h4>
-              <p>partnerships@art4awareness.in</p>
-              <p style="color:var(--text-muted);font-size:0.8rem">For corporate sponsors & NGOs</p>
-            </div>
-          </div>
-
-          <div style="background:var(--primary-pale);border-radius:var(--radius-lg);padding:24px;margin-top:16px">
-            <h4 style="color:var(--primary);margin-bottom:8px">🎓 For Schools & Teachers</h4>
-            <p style="font-size:0.88rem">Want to register your school? Join our Teacher Ambassador program and bring art competitions to your students at zero cost.</p>
-            <button class="btn btn-primary btn-sm mt-16" onclick="startRegistration()">Register Your School</button>
-          </div>
-        </div>
-
-        <!-- Contact Form -->
-        <div style="background:white;border-radius:var(--radius-xl);padding:40px;box-shadow:var(--shadow-md)">
-          <h3 style="margin-bottom:24px">Send Us a Message</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Your Name *</label>
-              <input id="contact-name" class="form-input" type="text" placeholder="Full name" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Email *</label>
-              <input id="contact-email" class="form-input" type="email" placeholder="you@example.com" />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Subject</label>
-            <select id="contact-subject" class="form-select">
-              <option>General Inquiry</option>
-              <option>CSR Partnership</option>
-              <option>School Registration</option>
-              <option>Technical Support</option>
-              <option>Media / Press</option>
-              <option>Feedback / Suggestion</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Your Message *</label>
-            <textarea id="contact-message" class="form-textarea" placeholder="Tell us how we can help..." style="min-height:140px"></textarea>
-          </div>
-          <button class="form-submit" onclick="submitContactForm()">Send Message &rarr;</button>
-        </div>
-      </div>
-    </section>
-  `;
-  return el;
-}
 
 function submitContactForm() {
   const name = document.getElementById('contact-name')?.value.trim();

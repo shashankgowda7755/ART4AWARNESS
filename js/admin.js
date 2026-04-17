@@ -1,5 +1,5 @@
 // ============================================
-//  AWARENESS BY ART — Admin Panel
+//  ART FOR AWARENESS — Admin Panel
 // ============================================
 
 // ─── Utility ───
